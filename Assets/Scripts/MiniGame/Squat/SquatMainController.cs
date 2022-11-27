@@ -6,21 +6,23 @@ public class SquatMainController : MonoBehaviour
 {
     public WifiSessionController wifiController;
     public SquatPlayer player;
-    public List<Object> stages;
+    public List<GameObject> stages;
     private int _curStageNo;
     private int _hardness;
     // Start is called before the first frame update
     private void Start()
     {
         _curStageNo = 0;
+        _hardness = 10;
         // TODO : Provide Character to initial location
         // TODO : Setting camera, 
     }
 
-    private void update()
+    private void Update()
     {
         if (player.didSquat())
         {
+            print("squated");
             int damage = player.damage;
             if (wifiController.isEventExist())
                 damage *= 2;
@@ -35,9 +37,10 @@ public class SquatMainController : MonoBehaviour
         {
             GoDeeper();
             setStage();
+            _hardness = 10;
             return true;
         }
-
+        
         return false;
     }
     
@@ -49,7 +52,11 @@ public class SquatMainController : MonoBehaviour
 
     private void setStage()
     {
-        // TODO : 스테이지 설정하기.
+        if(_curStageNo != 0)
+        {
+            stages[_curStageNo - 1].SetActive(false);
+            stages[_curStageNo].SetActive(true);
+        }
     }
 
     public int result()
