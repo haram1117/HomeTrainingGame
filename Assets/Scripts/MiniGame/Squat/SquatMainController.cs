@@ -30,7 +30,7 @@ public class SquatMainController : MonoBehaviour
         }
     }
 
-    private bool DigAttack(int damage)
+    private bool DigAttack(int damage)  
     {
         _hardness -= damage;
         if (_hardness < 0)
