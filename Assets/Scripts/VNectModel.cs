@@ -215,44 +215,44 @@ public class VNectModel : MonoBehaviour
         {
             // Line Child Settings
             // Right Arm
-            AddSkeleton(PositionIndex.rShldrBend, PositionIndex.rForearmBend);
-            AddSkeleton(PositionIndex.rForearmBend, PositionIndex.rHand);
-            AddSkeleton(PositionIndex.rHand, PositionIndex.rThumb2);
-            AddSkeleton(PositionIndex.rHand, PositionIndex.rMid1);
+            AddSkeleton(PositionIndex.rShldrBend, PositionIndex.rForearmBend, "R_Shoulder_Forearm");
+            AddSkeleton(PositionIndex.rForearmBend, PositionIndex.rHand, "R_Forearm_Hand");
+            AddSkeleton(PositionIndex.rHand, PositionIndex.rThumb2, "R_Hand_Thumb");
+            AddSkeleton(PositionIndex.rHand, PositionIndex.rMid1, "R_Hand_Mid");
 
             // Left Arm
-            AddSkeleton(PositionIndex.lShldrBend, PositionIndex.lForearmBend);
-            AddSkeleton(PositionIndex.lForearmBend, PositionIndex.lHand);
-            AddSkeleton(PositionIndex.lHand, PositionIndex.lThumb2);
-            AddSkeleton(PositionIndex.lHand, PositionIndex.lMid1);
+            AddSkeleton(PositionIndex.lShldrBend, PositionIndex.lForearmBend,"L_Shoulder_Forearm");
+            AddSkeleton(PositionIndex.lForearmBend, PositionIndex.lHand, "L_Forearm_Hand");
+            AddSkeleton(PositionIndex.lHand, PositionIndex.lThumb2, "L_Hand_Thumb");
+            AddSkeleton(PositionIndex.lHand, PositionIndex.lMid1, "L_Hand_Mid");
 
             // Fase
-            AddSkeleton(PositionIndex.lEar, PositionIndex.Nose);
-            AddSkeleton(PositionIndex.rEar, PositionIndex.Nose);
+            AddSkeleton(PositionIndex.lEar, PositionIndex.Nose, "FaceL_Ear_Nose");
+            AddSkeleton(PositionIndex.rEar, PositionIndex.Nose, "FaceR_Ear_Nose");
 
             // Right Leg
-            AddSkeleton(PositionIndex.rThighBend, PositionIndex.rShin);
-            AddSkeleton(PositionIndex.rShin, PositionIndex.rFoot);
-            AddSkeleton(PositionIndex.rFoot, PositionIndex.rToe);
+            AddSkeleton(PositionIndex.rThighBend, PositionIndex.rShin, "R_Thigh_Shin");
+            AddSkeleton(PositionIndex.rShin, PositionIndex.rFoot, "R_Shin_Foot");
+            AddSkeleton(PositionIndex.rFoot, PositionIndex.rToe, "R_Foot_Toe");
 
             // Left Leg
-            AddSkeleton(PositionIndex.lThighBend, PositionIndex.lShin);
-            AddSkeleton(PositionIndex.lShin, PositionIndex.lFoot);
-            AddSkeleton(PositionIndex.lFoot, PositionIndex.lToe);
+            AddSkeleton(PositionIndex.lThighBend, PositionIndex.lShin, "L_Thigh_Shin");
+            AddSkeleton(PositionIndex.lShin, PositionIndex.lFoot, "L_Shin_Foot");
+            AddSkeleton(PositionIndex.lFoot, PositionIndex.lToe, "L_Foot_Toe");
 
             // etc
-            AddSkeleton(PositionIndex.spine, PositionIndex.neck);
-            AddSkeleton(PositionIndex.neck, PositionIndex.head);
-            AddSkeleton(PositionIndex.head, PositionIndex.Nose);
-            AddSkeleton(PositionIndex.neck, PositionIndex.rShldrBend);
-            AddSkeleton(PositionIndex.neck, PositionIndex.lShldrBend);
-            AddSkeleton(PositionIndex.rThighBend, PositionIndex.rShldrBend);
-            AddSkeleton(PositionIndex.lThighBend, PositionIndex.lShldrBend);
-            AddSkeleton(PositionIndex.rShldrBend, PositionIndex.abdomenUpper);
-            AddSkeleton(PositionIndex.lShldrBend, PositionIndex.abdomenUpper);
-            AddSkeleton(PositionIndex.rThighBend, PositionIndex.abdomenUpper);
-            AddSkeleton(PositionIndex.lThighBend, PositionIndex.abdomenUpper);
-            AddSkeleton(PositionIndex.lThighBend, PositionIndex.rThighBend);
+            AddSkeleton(PositionIndex.spine, PositionIndex.neck, "Spine_Neck");
+            AddSkeleton(PositionIndex.neck, PositionIndex.head, "Neck_Head");
+            AddSkeleton(PositionIndex.head, PositionIndex.Nose, "Head_Nose");
+            AddSkeleton(PositionIndex.neck, PositionIndex.rShldrBend, "R_Neck_Shoulder");
+            AddSkeleton(PositionIndex.neck, PositionIndex.lShldrBend, "L_Neck_Shoulder");
+            AddSkeleton(PositionIndex.rThighBend, PositionIndex.rShldrBend, "R_Thigh_Shoulder");
+            AddSkeleton(PositionIndex.lThighBend, PositionIndex.lShldrBend, "L_Thigh_Shoulder");
+            AddSkeleton(PositionIndex.rShldrBend, PositionIndex.abdomenUpper, "R_Shoulder_Abdomen");
+            AddSkeleton(PositionIndex.lShldrBend, PositionIndex.abdomenUpper, "L_Shoulder_Abdomen");
+            AddSkeleton(PositionIndex.rThighBend, PositionIndex.abdomenUpper, "R_Thigh_Abdomen");
+            AddSkeleton(PositionIndex.lThighBend, PositionIndex.abdomenUpper, "L_Thigh_Abdomen");
+            AddSkeleton(PositionIndex.lThighBend, PositionIndex.rThighBend, "Thigh_Left_Right");
         }
 
         // Set Inverse
@@ -396,11 +396,12 @@ public class VNectModel : MonoBehaviour
     /// </summary>
     /// <param name="s">position index</param>
     /// <param name="e">position index</param>
-    private void AddSkeleton(PositionIndex s, PositionIndex e)
+    /// <param name="lineName">skeleton name</param>
+    private void AddSkeleton(PositionIndex s, PositionIndex e, string lineName)
     {
         var sk = new Skeleton()
         {
-            LineObject = new GameObject("Line"),
+            LineObject = new GameObject(lineName),
             start = jointPoints[s.Int()],
             end = jointPoints[e.Int()],
         };
