@@ -5,10 +5,11 @@ using UnityEngine;
 public class SquatMainController : MonoBehaviour
 {
     public WifiSessionController wifiController;
-    public SquatPlayer player;
-    public List<GameObject> stages;
-    private int _curStageNo;
-    private int _hardness;
+    public SquatPlayer player; // 현재 게임을 진행중인 플레이어.
+    public List<GameObject> stages; // 스테이지들을 관리하는 리스트
+    private int _curStageNo; // 현재 클리어중인 스테이지 넘버
+    private int _hardness; // 각스테이지별 채력
+    
     // Start is called before the first frame update
     private void Start()
     {
@@ -18,6 +19,7 @@ public class SquatMainController : MonoBehaviour
         // TODO : Setting camera, 
     }
 
+    // 플레이어가 스쿼트를 했으면, Dig Attack 함수를 호출함.
     private void Update()
     {
         if (player.didSquat())
@@ -30,6 +32,7 @@ public class SquatMainController : MonoBehaviour
         }
     }
 
+    // 현재 스테이지에 데미지를 입히고, 스테이지가 넘어갈 경우 다음 스테이지로 설정함.
     private bool DigAttack(int damage)  
     {
         _hardness -= damage;
@@ -44,12 +47,14 @@ public class SquatMainController : MonoBehaviour
         return false;
     }
     
+    // 다음 스테이지로 변수들 변경
     private void GoDeeper()
     {
         _curStageNo++;
         _hardness = _curStageNo * 2;
     }
 
+    // 현재 스테이지 로드
     private void setStage()
     {
         if(_curStageNo != 0)
@@ -59,6 +64,8 @@ public class SquatMainController : MonoBehaviour
         }
     }
 
+    // 게임 결과를 리턴하는 함수.
+    // TODO: 시간 측정을 만들어서 리턴해야할듯.
     public int result()
     {
         // TODO : return the score of played mini game
