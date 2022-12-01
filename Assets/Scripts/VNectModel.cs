@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -122,6 +123,10 @@ public class VNectModel : MonoBehaviour
     private float prevTall = 224 * 0.75f;
     public float ZScale = 0.8f;
 
+    
+    // UnityChan's leg -rThighBend to rShin
+    public static float[] positions = {0,0,0,0};
+    
     private void Update()
     {
         if (jointPoints != null)
@@ -319,7 +324,12 @@ public class VNectModel : MonoBehaviour
         var t5 = (t5r + t5l) / 2f;
         var t = t1 + t2 + t3 + t4 + t5;
 
+        positions[0] = t3;
+        positions[1] = t4r;
+        positions[2] = t4l;
+        positions[3] = t4;
 
+        
         // Low pass filter in z direction
         tall = t * 0.7f + prevTall * 0.3f;
         prevTall = tall;
