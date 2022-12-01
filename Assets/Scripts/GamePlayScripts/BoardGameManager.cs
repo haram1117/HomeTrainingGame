@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 public class BoardGameManager : MonoBehaviour
 {
     private static BoardGameManager instance = null;
-
+    private int turn;
     private void Awake()
     {
         if (null == instance)
