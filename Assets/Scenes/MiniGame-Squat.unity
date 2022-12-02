@@ -1033,7 +1033,7 @@ MonoBehaviour:
   _layer:
     serializedVersion: 2
     m_Bits: 4
-  UseWebCam: 1
+  UseWebCam: 0
   WebCamIndex: 1
   VideoPlayer: {fileID: 1131002475}
 --- !u!23 &693385928
