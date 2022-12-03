@@ -19,7 +19,7 @@ public class Player : MonoBehaviour
     /// <summary>
     /// 보유 중인 Gold 개수
     /// </summary>
-    private int goldCount;
+    private int goldCount = 40;
 
     /// <summary>
     /// 이번 턴에서 수행한 Dice Rolling Value
@@ -65,6 +65,11 @@ public class Player : MonoBehaviour
     /// Instantiate에 사용할 girlPrefab
     /// </summary>
     [SerializeField] private GameObject girlPrefab;
+
+    /// <summary>
+    /// 주사위 후 최종 목표위치가 star 위치일 때 true
+    /// </summary>
+    private bool canGetStar;
     
     private PlayerState state = PlayerState.Waiting;
     private static Player instance = null;
@@ -96,6 +101,7 @@ public class Player : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(this.gameObject);
+            // TODO: CharacterType에 따라 서버에서 플레이어 Instancing 할 때 position 설정 필요
             if (characterType == CharacterType.Boy)
             {
                 GameObject character = Instantiate(boyPrefab, Vector3.zero, Quaternion.identity);
@@ -110,7 +116,6 @@ public class Player : MonoBehaviour
             }
             animator = GetComponentInChildren<Animator>();
             rail = GameObject.Find($"RailFor{characterType}").GetComponent<Rail>();
-
         }
         else
         {
@@ -147,8 +152,7 @@ public class Player : MonoBehaviour
     /// </summary>
     private void CharacterMove()
     {
-        float m;
-        m = currentSeg == rail.nodes.Length - 1 ? (rail.nodes[0].position - rail.nodes[currentSeg].position).magnitude : (rail.nodes[currentSeg + 1].position - rail.nodes[currentSeg].position).magnitude;
+        var m = currentSeg == rail.nodes.Length - 1 ? (rail.nodes[0].position - rail.nodes[currentSeg].position).magnitude : (rail.nodes[currentSeg + 1].position - rail.nodes[currentSeg].position).magnitude;
         float s = (Time.deltaTime * 1 / m) * speed;
         transition += s;
         
@@ -172,12 +176,21 @@ public class Player : MonoBehaviour
                      {
                          Invoke(nameof(MoveAgain), 0.5f);
                      }
-                     else
+                     else 
                      {
-                         // 턴 종료 flag
-                         isJumpingCompleted = true;
-                         BoardGameManager.Instance.SetNextPlayer();
-                         BoardGameManager.Instance.DoNextTurn();
+                         // 플레이어가 가야하는 마지막 칸이 Star가 있는 칸인 경우
+                         if ((int)Math.Truncate((double)currentSeg / 2) == BoardGameManager.Instance.starIndex)
+                         {
+                             BoardGameManager.Instance.PlayerGetStar();
+                         }
+                         else
+                         {
+                             // // 턴 종료 flag
+                             // isJumpingCompleted = true;
+                             // BoardGameManager.Instance.SetNextPlayer();
+                             // BoardGameManager.Instance.DoNextTurn();
+                             TurnFinish();
+                         }
                      }
                  }
             }
@@ -201,9 +214,48 @@ public class Player : MonoBehaviour
         }
     }                                                                                                      
 
+    /// <summary>
+    /// 다음 칸으로 말을 옮김
+    /// </summary>
     private void MoveAgain()
     {
         animator.SetTrigger(JumpTrigger);
         state = PlayerState.Moving;
+    }
+
+    /// <summary>
+    /// 해당 재화를 구매할 수 있는 지 
+    /// </summary>
+    /// <returns></returns>
+    public bool CanGetStar(out int gold)
+    {
+        int requireGoldValue = BoardGameManager.Instance.GetGoldValueForStar();
+        if (goldCount >= requireGoldValue)
+        {
+            goldCount -= requireGoldValue;
+            gold = goldCount;
+            starCount++;
+            return true;
+        }
+        gold = goldCount;
+        return false;
+    }
+
+    public int GetNowGold()
+    {
+        return goldCount;
+    }
+
+    public int GetNowStar()
+    {
+        return starCount;
+    }
+
+    public void TurnFinish()
+    {
+        // 턴 종료 flag
+        isJumpingCompleted = true;
+        BoardGameManager.Instance.SetNextPlayer();
+        BoardGameManager.Instance.DoNextTurn();
     }
 }
