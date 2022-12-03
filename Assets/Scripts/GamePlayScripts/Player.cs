@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+enum CharacterType
+{
+    Boy, Girl
+}
 public class Player : MonoBehaviour
 {
     // TODO: 플레이어 점프 이용한 스테이지 간 이동 구현
@@ -47,6 +51,21 @@ public class Player : MonoBehaviour
     /// </summary>
     private Animator animator;
 
+    /// <summary>
+    /// Player의 캐릭터 타입
+    /// </summary>
+    [SerializeField] private CharacterType characterType;
+    
+    /// <summary>
+    /// Instantiate에 사용할 boyPrefab
+    /// </summary>
+    [SerializeField] private GameObject boyPrefab;
+    
+    /// <summary>
+    /// Instantiate에 사용할 girlPrefab
+    /// </summary>
+    [SerializeField] private GameObject girlPrefab;
+    
     private PlayerState state = PlayerState.Waiting;
     private static Player instance = null;
     private bool oneFinished;
@@ -77,7 +96,21 @@ public class Player : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(this.gameObject);
+            if (characterType == CharacterType.Boy)
+            {
+                GameObject character = Instantiate(boyPrefab, Vector3.zero, Quaternion.identity);
+                character.transform.SetParent(transform.GetChild(0).transform, false);
+                playerMeshTransform = character.transform;
+            }
+            else
+            {
+                GameObject character = Instantiate(girlPrefab, Vector3.zero, Quaternion.identity);
+                character.transform.SetParent(transform.GetChild(0).transform, false);
+                playerMeshTransform = character.transform;
+            }
             animator = GetComponentInChildren<Animator>();
+            rail = GameObject.Find($"RailFor{characterType}").GetComponent<Rail>();
+
         }
         else
         {
