@@ -17,6 +17,7 @@ unsigned long timeStamp;
 unsigned long timeBudget;
 
 
+
 #ifndef STASSID
 #define STASSID "KT_GiGA_2G_Wave2_17CB"
 #define STAPSK  "83jd12zj88"
@@ -25,8 +26,8 @@ unsigned long timeBudget;
 const char* ssid     = STASSID;
 const char* password = STAPSK;
 
-const char* host = "172.30.1.11";
-const uint16_t port = 3000;
+const char* host = "172.30.1.42";
+const uint16_t port = 4129;
 
 ESP8266WiFiMulti WiFiMulti;
 WiFiClient client;
