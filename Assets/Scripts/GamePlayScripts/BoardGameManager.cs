@@ -86,14 +86,21 @@ public class BoardGameManager : MonoBehaviour
     /// </summary>
     public void SetDiceValue(int value)
     {
-        // TODO: 버그 고친 후에 주석 풀기
-        // localPlayer.MoveCharacterWithStageNum(value);
+        localPlayer.MoveCharacterWithStageNum(value);
     }
 
-    public Transform GetStageLocation(int index)
+    /// <summary>
+    /// 다움 턴 player ID 설정
+    /// </summary>
+    public void SetNextPlayer()
     {
-        return stages[index];
+        turnPlayerID = (turnPlayerID == 0) ? 1 : 0;
     }
 
+    public void DoNextTurn()
+    {
+        uiManager.DiceUIOpen(); // TODO: RPC target.Others로 상대방 local에서 dice panel 열어지도록
+    }
+    
     
 }

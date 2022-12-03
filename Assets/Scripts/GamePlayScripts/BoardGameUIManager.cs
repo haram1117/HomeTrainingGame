@@ -68,7 +68,7 @@ public class BoardGameUIManager : MonoBehaviour
         }
         isDiceRolling = false;
         BoardGameManager.Instance.SetDiceValue(value);
-        Invoke(nameof(DiceUIClose), 1.5f);
+        Invoke(nameof(DiceUIClose), 0.3f);
     }
 
     /// <summary>
@@ -82,7 +82,7 @@ public class BoardGameUIManager : MonoBehaviour
         }
         Animator animator = dicePanel.GetComponent<Animator>();
         animator.SetTrigger(CloseTrigger);
-        this.Invoke(() => dicePanel.SetActive(false), 3f);
+        this.Invoke(() => dicePanel.SetActive(false), 0.5f);
     }
 }
 

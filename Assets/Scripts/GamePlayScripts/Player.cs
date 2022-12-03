@@ -16,7 +16,7 @@ public class Player : MonoBehaviour
     /// 보유 중인 Gold 개수
     /// </summary>
     private int goldCount;
-        
+
     /// <summary>
     /// 이번 턴에서 수행한 Dice Rolling Value
     /// </summary>
@@ -26,7 +26,7 @@ public class Player : MonoBehaviour
     /// 한 턴에서 목표하는 stage num
     /// </summary>
     private int destStageNum;
-    
+
     /// <summary>
     /// 현재 속해있는 stage의 number(0 ~ 15)
     /// </summary>
@@ -35,10 +35,32 @@ public class Player : MonoBehaviour
     /// <summary>
     /// player가 가야할 stage가 남음
     /// </summary>
-    private bool isMoving;
+    private int stageLeft;
+
+    /// <summary>
+    /// Player Mesh
+    /// </summary>
+    [SerializeField] private Transform playerMeshTransform;
+    
+    /// <summary>
+    /// player Animator
+    /// </summary>
+    private Animator animator;
+
     private PlayerState state = PlayerState.Waiting;
     private static Player instance = null;
-    private bool isJumping = false;
+    private bool oneFinished;
+
+    [SerializeField] private Rail rail;
+    private int currentSeg = 0;
+    private float transition;
+    private bool isJumpingCompleted;
+    [SerializeField] private float speed = 2.5f;
+    
+    
+    private static readonly int JumpEndTrigger = Animator.StringToHash("JumpEndTrigger");
+    private static readonly int JumpTrigger = Animator.StringToHash("JumpTrigger");
+
     public static Player Instance
     {
         get
@@ -48,13 +70,14 @@ public class Player : MonoBehaviour
             return instance;
         }
     }
-    
+
     private void Awake()
     {
         if (null == instance)
         {
             instance = this;
             DontDestroyOnLoad(this.gameObject);
+            animator = GetComponentInChildren<Animator>();
         }
         else
         {
@@ -64,10 +87,11 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if (!isJumping && state == PlayerState.Moving && isMoving)
+        if (!rail)
+            return;
+        if (!isJumpingCompleted && state == PlayerState.Moving && stageLeft > 0)
         {
-            var v = BoardGameManager.Instance.GetStageLocation(stageNum + 1).GetChild(0).position;
-            StartCoroutine(DotheJump(v, 1.5f));
+            CharacterMove();
         }
     }
 
@@ -77,14 +101,12 @@ public class Player : MonoBehaviour
     /// <param name="num">Dice Index (Dice Value: num + 1)</param>
     public void MoveCharacterWithStageNum(int num)
     {
+        isJumpingCompleted = false;
+        animator.SetTrigger(JumpTrigger);
         state = PlayerState.Moving;
         nowDiceValue = num + 1;
         destStageNum = stageNum + nowDiceValue - 1;
-        isMoving = true;
-        // for (int i = 0; i < nowDiceValue; i++)
-        // {
-        //     CharacterMove();
-        // }
+        stageLeft = nowDiceValue;
     }
 
     /// <summary>
@@ -92,52 +114,63 @@ public class Player : MonoBehaviour
     /// </summary>
     private void CharacterMove()
     {
-        //TODO: 더 사실적으로 점프 구현 가능 -> https://www.forrestthewoods.com/blog/solving_ballistic_trajectories/
+        float m;
+        m = currentSeg == rail.nodes.Length - 1 ? (rail.nodes[0].position - rail.nodes[currentSeg].position).magnitude : (rail.nodes[currentSeg + 1].position - rail.nodes[currentSeg].position).magnitude;
+        float s = (Time.deltaTime * 1 / m) * speed;
+        transition += s;
         
-    }
-
-    /// <summary>
-    /// Player의 stage 이동에 Jump 수행
-    /// </summary>
-    /// <param name="destination"></param>
-    /// <param name="time"></param>
-    /// <returns></returns>
-    private IEnumerator DotheJump(Vector3 destination, float time)
-    {
-        // TODO: 점프 Location 재지정 필요, Rotation도 Lerp시키면서 이동할 수 있도록
-        isJumping = true;
-        var timer = 0.0f;
-        var start = transform.position;
-        var dist = (start - destination).magnitude;
-        var maxHeight = dist * 0.5f; // heightVsDistanceFactor = 0.5f
-        Vector3 axis;
-        var doSpin = (dist >= 3.0f); // minDistForFlip = 3.0f
-        // if (doSpin)
-        // {
-        //     axis = Vector3.Cross(start - destination, Vector3.up);
-        // }
-
-        while (timer <= time) {
-     
-            var vT = Vector3.Lerp(start, destination, timer/time);
-            vT.y = Mathf.Sin(Mathf.PI * timer/time) * maxHeight;
-            transform.position = vT;
-            
-            // if (doSpin) {
-            //     transform.rotation = Quaternion.AngleAxis(360.0f * timer/time, axis);
-            // }
-            timer += Time.deltaTime;
-            yield return null;
-        }
-     
-        // transform.rotation = Quaternion.identity;
-        transform.position = destination;
-        if (destStageNum < stageNum)
-            isMoving = false;
-        else
+        if (transition > 1)
         {
-            stageNum++;
-            isJumping = false;
+            transition = 0;
+            currentSeg++;
+            if (currentSeg == rail.nodes.Length)
+            {
+                currentSeg = 0;
+            }
+            else
+            {
+                 // 한 칸 전진
+                 if (currentSeg % 2 == 0)
+                 {
+                     stageLeft--;
+                     state = PlayerState.Waiting;
+                     animator.SetTrigger(JumpEndTrigger);
+                     if (stageLeft > 0)
+                     {
+                         Invoke(nameof(MoveAgain), 0.5f);
+                     }
+                     else
+                     {
+                         // 턴 종료 flag
+                         isJumpingCompleted = true;
+                         BoardGameManager.Instance.SetNextPlayer();
+                         BoardGameManager.Instance.DoNextTurn();
+                     }
+                 }
+            }
         }
+        else if (transition < 0)
+        {
+            transition = 1;
+            currentSeg--;
+            if (currentSeg == -1)
+            {
+                currentSeg = rail.nodes.Length - 2;
+            }
+        }
+
+        if (currentSeg != rail.nodes.Length - 1)
+        {
+            transform.position = rail.CatmullPosition(currentSeg, transition);
+            transform.rotation = rail.Orientation(currentSeg, transition);
+            playerMeshTransform.localPosition = Vector3.zero;
+            playerMeshTransform.localRotation = Quaternion.identity;
+        }
+    }                                                                                                      
+
+    private void MoveAgain()
+    {
+        animator.SetTrigger(JumpTrigger);
+        state = PlayerState.Moving;
     }
 }
