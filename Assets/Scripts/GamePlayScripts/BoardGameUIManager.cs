@@ -35,6 +35,10 @@ public class BoardGameUIManager : MonoBehaviour
     {
         diceRollBtn.onClick.AddListener(DiceRoll);
         starGetBtn.onClick.AddListener(GetStar);
+    }
+
+    private void Start()
+    {
         starNum.text = Player.Instance.GetNowStar().ToString();
         goldNum.text = Player.Instance.GetNowGold().ToString();
     }
@@ -137,6 +141,8 @@ public class BoardGameUIManager : MonoBehaviour
         animator.SetTrigger(CloseTrigger);
         this.Invoke(()=>starPanel.gameObject.SetActive(false), 0.8f);
         this.Invoke(()=>Player.Instance.TurnFinish(), 1.0f);
+        BoardGameManager.Instance.GoToNextLevelStar();
+        BoardGameManager.Instance.StarRandomGenerate();
     }
 }
 

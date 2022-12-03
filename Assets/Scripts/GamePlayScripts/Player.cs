@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
     /// <summary>
     /// 보유 중인 Star 개수
     /// </summary>
-    private int starCount;
+    private int starCount = 0;
 
     /// <summary>
     /// 보유 중인 Gold 개수

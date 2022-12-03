@@ -40,6 +40,8 @@ public class BoardGameManager : MonoBehaviour
     [SerializeField] private Transform[] stages;
 
     [SerializeField] private GameObject starPrefab;
+
+    private GameObject starObject;
     
     private int[] starLevel = { 10, 20, 30, 40, 50, 60, 70 };
     
@@ -122,12 +124,16 @@ public class BoardGameManager : MonoBehaviour
         uiManager.DiceUIOpen(); // TODO: RPC target.Others로 상대방 local에서 dice panel 열어지도록
     }
 
-    private void StarRandomGenerate()
+    public void StarRandomGenerate()
     {
+        if (starObject)
+        {
+            Destroy(starObject);
+        }
         int randomStage = Random.Range(0, 16);
         Vector3 starLocation = new Vector3(stages[randomStage].position.x, stages[randomStage].position.y + 5.0f,
             stages[randomStage].position.z);
-        Instantiate(starPrefab, starLocation, starPrefab.transform.localRotation);
+        starObject = Instantiate(starPrefab, starLocation, starPrefab.transform.localRotation);
         starIndex = randomStage;
     }
 
