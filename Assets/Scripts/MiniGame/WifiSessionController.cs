@@ -38,7 +38,7 @@ public class WifiSessionController : MonoBehaviour
     void Start()
     {
         hasEvent = false;
-        tcpListenerThread = new Thread(new ThreadStart(Listen));
+        tcpListenerThread = new Thread(Listen);
         tcpListenerThread.IsBackground = true;
         tcpListenerThread.Start();
     }
@@ -59,7 +59,6 @@ public class WifiSessionController : MonoBehaviour
     private void Listen()
     {
         try { 			
-            // Create listener on localhost port 8052. 			
             tcpListener = new TcpListener(IPAddress.Parse(myIp), port); 			
             tcpListener.Start();              
             Debug.Log("Server is listening");              
