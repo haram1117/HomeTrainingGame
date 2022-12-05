@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-enum CharacterType
+public enum CharacterType
 {
     Boy, Girl
 }
@@ -99,6 +99,8 @@ public class Player : MonoBehaviour
     {
         if (null == instance)
         {
+            SetCharacterType();
+
             instance = this;
             DontDestroyOnLoad(this.gameObject);
             // TODO: CharacterType에 따라 서버에서 플레이어 Instancing 할 때 position 설정 필요
@@ -257,5 +259,15 @@ public class Player : MonoBehaviour
         isJumpingCompleted = true;
         BoardGameManager.Instance.SetNextPlayer();
         BoardGameManager.Instance.DoNextTurn();
+    }
+
+    private void SetCharacterType()
+    {
+        GameObject lobbyManager = GameObject.Find("Lobby Manager");
+        if (lobbyManager != null)
+        {
+            characterType = lobbyManager.GetComponent<LobbyManager>().selectedCharcter;
+            Destroy(lobbyManager);
+        }
     }
 }
