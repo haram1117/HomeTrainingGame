@@ -4,7 +4,7 @@ public class PlankPlayer : MonoBehaviour
 {
     public VNectModel model;
     
-    public float GetPositionVectorMagnitude()
+    private float GetPositionVectorMagnitude()
     {
         var modelJointPoints = model.JointPoints;
         var head = modelJointPoints[PositionIndex.head.Int()];
@@ -22,29 +22,23 @@ public class PlankPlayer : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// 얼마나 스쿼트 잘하고 있는지
+    /// </summary>
+    /// <returns>스쿼트 점수 2~5 그만두면 -1</returns>
     public int GetPositionScore()
     {
         float mag = GetPositionVectorMagnitude();
         float temp = Mathf.Abs(mag - 0.3f);
-        if (temp < 0.15)
+        if (temp < 0.1)
             return 5;
-        if (temp < 0.3)
+        if (temp < 0.2)
             return 4;
-        if (temp < 0.45)
+        if (temp < 0.3)
             return 3;
-        if (temp < 0.6)
+        if (temp < 0.4)
             return 2;
-        return 0;
-
+        return -1;
     }
     
-    public void Start()
-    {
-        
-    }
-
-    public void Update()
-    {
-        
-    }
 }
