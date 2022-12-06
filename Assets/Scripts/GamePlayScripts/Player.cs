@@ -104,7 +104,6 @@ public class Player : MonoBehaviour, IPunObservable
 
     private void Start()
     {
-        // TODO: CharacterType에 따라 서버에서 플레이어 Instancing 할 때 position 설정 필요
         if (characterType == CharacterType.Boy)
         {
             GameObject character = Instantiate(boyPrefab, Vector3.zero, Quaternion.identity);
@@ -119,6 +118,9 @@ public class Player : MonoBehaviour, IPunObservable
         }
         animator = GetComponentInChildren<Animator>();
         rail = GameObject.Find($"RailFor{characterType}").GetComponent<Rail>();
+
+        transform.position = rail.nodes[0].position;
+        transform.rotation = rail.nodes[0].rotation;
     }
 
     private void Update()
