@@ -16,12 +16,14 @@ public class TCPManager : MonoBehaviour
     // StreamReader reader;
     bool socketReady = false;
     NetworkStream stream;
-
+    public Vector2 cursorPosition;
+    public bool isMouseClicked;
 
     // Start is called before the first frame update
     void Start()
     {
         CheckReceive();
+        cursorPosition = new Vector2();
     }
 
     // Update is called once per frame
@@ -35,6 +37,17 @@ public class TCPManager : MonoBehaviour
                 stream.Read(receivedBuffer, 0, receivedBuffer.Length);
                 string msg = Encoding.UTF8.GetString(receivedBuffer, 0, receivedBuffer.Length); // byte[] to string
                 Debug.Log(msg);
+                if (msg.Contains("isClosed"))
+                {
+                    isMouseClicked = msg.Split(' ')[1] == "True";
+                }
+                else if (msg.Contains("x:"))
+                {
+                    string xStr = msg.Split(' ')[1].Remove(msg.Split(' ')[1].Length - 1);
+                    string yStr = msg.Split(' ')[3];
+                    cursorPosition.x = float.Parse(xStr);
+                    cursorPosition.y = float.Parse(yStr) * (-1);
+                }
             }
         }
     }
