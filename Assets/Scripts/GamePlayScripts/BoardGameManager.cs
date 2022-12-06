@@ -1,3 +1,5 @@
+using Photon.Pun;
+using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -65,6 +67,10 @@ public class BoardGameManager : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(this.gameObject);
             playerStates = new PlayerState[] { PlayerState.Turn, PlayerState.Waiting}; // player 두 명으로 가정, host선 강제
+
+            localPlayer = PhotonNetwork.Instantiate("Prefabs/Player", Vector3.zero, Quaternion.identity).GetComponent<Player>();
+
+            GameObject.Find("MainCanvas").GetComponent<BoardGameUIManager>().localPlayer = this.localPlayer;
         }
         else
         {
@@ -162,5 +168,4 @@ public class BoardGameManager : MonoBehaviour
     {
         starLevelIndex++;
     }
-
 }

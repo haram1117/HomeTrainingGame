@@ -1,3 +1,5 @@
+using Photon.Pun;
+using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,7 +10,7 @@ public enum CharacterType
 {
     Boy, Girl
 }
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IPunObservable
 {
     // TODO: 플레이어 점프 이용한 스테이지 간 이동 구현
     /// <summary>
@@ -52,19 +54,24 @@ public class Player : MonoBehaviour
     private Animator animator;
 
     /// <summary>
-    /// Player의 캐릭터 타입
-    /// </summary>
-    [SerializeField] private CharacterType characterType;
-    
-    /// <summary>
     /// Instantiate에 사용할 boyPrefab
     /// </summary>
     [SerializeField] private GameObject boyPrefab;
-    
+
     /// <summary>
     /// Instantiate에 사용할 girlPrefab
     /// </summary>
     [SerializeField] private GameObject girlPrefab;
+
+    /// <summary>
+    /// Player의 캐릭터 타입
+    /// </summary>
+    [SerializeField] private CharacterType characterType;
+
+    /// <summary>
+    /// Player의 Photon View 컴포넌트
+    /// </summary>
+    [SerializeField] private PhotonView PV;
 
     /// <summary>
     /// 주사위 후 최종 목표위치가 star 위치일 때 true
@@ -72,7 +79,6 @@ public class Player : MonoBehaviour
     private bool canGetStar;
     
     private PlayerState state = PlayerState.Waiting;
-    private static Player instance = null;
     private bool oneFinished;
 
     [SerializeField] private Rail rail;
@@ -85,44 +91,36 @@ public class Player : MonoBehaviour
     private static readonly int JumpEndTrigger = Animator.StringToHash("JumpEndTrigger");
     private static readonly int JumpTrigger = Animator.StringToHash("JumpTrigger");
 
-    public static Player Instance
+    private void Awake()
     {
-        get
+        SetCharacterType();
+        DontDestroyOnLoad(this.gameObject);
+
+        if (!PV.IsMine)
         {
-            if (null == instance)
-                return null;
-            return instance;
+            Destroy(transform.Find("MainCamera").gameObject);
         }
     }
 
-    private void Awake()
+    private void Start()
     {
-        if (null == instance)
+        if (characterType == CharacterType.Boy)
         {
-            SetCharacterType();
-
-            instance = this;
-            DontDestroyOnLoad(this.gameObject);
-            // TODO: CharacterType에 따라 서버에서 플레이어 Instancing 할 때 position 설정 필요
-            if (characterType == CharacterType.Boy)
-            {
-                GameObject character = Instantiate(boyPrefab, Vector3.zero, Quaternion.identity);
-                character.transform.SetParent(transform.GetChild(0).transform, false);
-                playerMeshTransform = character.transform;
-            }
-            else
-            {
-                GameObject character = Instantiate(girlPrefab, Vector3.zero, Quaternion.identity);
-                character.transform.SetParent(transform.GetChild(0).transform, false);
-                playerMeshTransform = character.transform;
-            }
-            animator = GetComponentInChildren<Animator>();
-            rail = GameObject.Find($"RailFor{characterType}").GetComponent<Rail>();
+            GameObject character = Instantiate(boyPrefab, Vector3.zero, Quaternion.identity);
+            character.transform.SetParent(transform.GetChild(0).transform, false);
+            playerMeshTransform = character.transform;
         }
         else
         {
-            Destroy(this.gameObject);
+            GameObject character = Instantiate(girlPrefab, Vector3.zero, Quaternion.identity);
+            character.transform.SetParent(transform.GetChild(0).transform, false);
+            playerMeshTransform = character.transform;
         }
+        animator = GetComponentInChildren<Animator>();
+        rail = GameObject.Find($"RailFor{characterType}").GetComponent<Rail>();
+
+        transform.position = rail.nodes[0].position;
+        transform.rotation = rail.nodes[0].rotation;
     }
 
     private void Update()
@@ -142,7 +140,8 @@ public class Player : MonoBehaviour
     public void MoveCharacterWithStageNum(int num)
     {
         isJumpingCompleted = false;
-        animator.SetTrigger(JumpTrigger);
+        // animator.SetTrigger(JumpTrigger);
+        PV.RPC("SetTriggerRPC", RpcTarget.All, JumpTrigger);
         state = PlayerState.Moving;
         nowDiceValue = num + 1;
         destStageNum = stageNum + nowDiceValue - 1;
@@ -168,33 +167,34 @@ public class Player : MonoBehaviour
             }
             else
             {
-                 // 한 칸 전진
-                 if (currentSeg % 2 == 0)
-                 {
-                     stageLeft--;
-                     state = PlayerState.Waiting;
-                     animator.SetTrigger(JumpEndTrigger);
-                     if (stageLeft > 0)
-                     {
-                         Invoke(nameof(MoveAgain), 0.5f);
-                     }
-                     else 
-                     {
-                         // 플레이어가 가야하는 마지막 칸이 Star가 있는 칸인 경우
-                         if ((int)Math.Truncate((double)currentSeg / 2) == BoardGameManager.Instance.starIndex)
-                         {
-                             BoardGameManager.Instance.PlayerGetStar();
-                         }
-                         else
-                         {
-                             // // 턴 종료 flag
-                             // isJumpingCompleted = true;
-                             // BoardGameManager.Instance.SetNextPlayer();
-                             // BoardGameManager.Instance.DoNextTurn();
-                             TurnFinish();
-                         }
-                     }
-                 }
+                // 한 칸 전진
+                if (currentSeg % 2 == 0)
+                {
+                    stageLeft--;
+                    state = PlayerState.Waiting;
+                    // animator.SetTrigger(JumpEndTrigger);
+                    PV.RPC("SetTriggerRPC", RpcTarget.All, JumpEndTrigger);
+                    if (stageLeft > 0)
+                    {
+                        Invoke(nameof(MoveAgain), 0.5f);
+                    }
+                    else 
+                    {
+                        // 플레이어가 가야하는 마지막 칸이 Star가 있는 칸인 경우
+                        if ((int)Math.Truncate((double)currentSeg / 2) == BoardGameManager.Instance.starIndex)
+                        {
+                            BoardGameManager.Instance.PlayerGetStar();
+                        }
+                        else
+                        {
+                            // // 턴 종료 flag
+                            // isJumpingCompleted = true;
+                            // BoardGameManager.Instance.SetNextPlayer();
+                            // BoardGameManager.Instance.DoNextTurn();
+                            TurnFinish();
+                        }
+                    }
+                }
             }
         }
         else if (transition < 0)
@@ -221,7 +221,8 @@ public class Player : MonoBehaviour
     /// </summary>
     private void MoveAgain()
     {
-        animator.SetTrigger(JumpTrigger);
+        // animator.SetTrigger(JumpTrigger);
+        PV.RPC("SetTriggerRPC", RpcTarget.All, JumpTrigger);
         state = PlayerState.Moving;
     }
 
@@ -263,11 +264,29 @@ public class Player : MonoBehaviour
 
     private void SetCharacterType()
     {
-        GameObject lobbyManager = GameObject.Find("Lobby Manager");
+        GameObject lobbyManager = GameObject.Find("LobbyManager");
         if (lobbyManager != null)
         {
             characterType = lobbyManager.GetComponent<LobbyManager>().selectedCharcter;
             Destroy(lobbyManager);
         }
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(characterType);
+        }
+        else
+        {
+            characterType = (CharacterType)stream.ReceiveNext();
+        }
+    }
+
+    [PunRPC]
+    private void SetTriggerRPC(int Trigger)
+    {
+        animator.SetTrigger(Trigger);
     }
 }

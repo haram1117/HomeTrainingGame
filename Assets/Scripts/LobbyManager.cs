@@ -18,6 +18,12 @@ public class LobbyManager : MonoBehaviourPunCallbacks {
     public PhotonView PV;
     public CharacterType selectedCharcter; // 사용자가 선택한 캐릭터
 
+    private void Awake()
+    {
+        DontDestroyOnLoad(this.gameObject);
+        PhotonNetwork.AutomaticallySyncScene = true;
+    }
+
     // 게임 실행과 동시에 마스터 서버 접속 시도
     private void Start() {
         PhotonNetwork.ConnectUsingSettings();
@@ -91,6 +97,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks {
         selectedCharcter = CharacterType.Boy;
         selectedCharacterText.text = "Your Character : BOY ";
         PV.RPC("OtherSelect", RpcTarget.Others, CharacterType.Boy);
+
         if (!girlButton.IsInteractable())
         {
             PV.RPC("StartGame", RpcTarget.All);
@@ -102,6 +109,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks {
         selectedCharcter = CharacterType.Girl;
         selectedCharacterText.text = "Your Character : GIRL ";
         PV.RPC("OtherSelect", RpcTarget.Others, CharacterType.Girl);
+
         if (!boyButton.IsInteractable())
         {
             PV.RPC("StartGame", RpcTarget.All);
@@ -111,8 +119,10 @@ public class LobbyManager : MonoBehaviourPunCallbacks {
     [PunRPC]
     private void StartGame()
     {
-        DontDestroyOnLoad(this.gameObject);
-        PhotonNetwork.LoadLevel("MainBoardGame");
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.LoadLevel("MainBoardGame");
+        }
     }
 
     [PunRPC]
