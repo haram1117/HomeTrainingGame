@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using Button = UnityEngine.UI.Button;
 
 
 enum Mode{
@@ -19,6 +20,9 @@ public class PlankMainController : MonoBehaviour
     public Text timeText;
     public Text announceText;
     public Text positionScoreText;
+    public GameObject panel;
+    public GameObject button;
+
     
     private Mode _gameMode;
     private float _time;
@@ -29,6 +33,7 @@ public class PlankMainController : MonoBehaviour
     public void Start()
     {
         StartGame();
+        button.SetActive(false);
     }
 
     public void Update()
@@ -55,6 +60,7 @@ public class PlankMainController : MonoBehaviour
     }
     private void PlayingGame()
     {
+        panel.SetActive(false);
         int posScore = player.GetPositionScore();
         positionScoreText.text = "플랭크 자세점수 : " + posScore;
         if((int)_prevtime != (int)_time)
@@ -90,6 +96,8 @@ public class PlankMainController : MonoBehaviour
     
     private void StartGame()
     {
+        
+        panel.SetActive(true);
         announceText.text = "플랭크 자세를 취해주세요";
         healthText.text = "";
         _time = 10;
@@ -102,10 +110,11 @@ public class PlankMainController : MonoBehaviour
 
     private void EndGame()
     {
-        
+        panel.SetActive(true);
         Debug.Log("플랭크 종료");
         _gameMode = Mode.END;
         announceText.text = "플랭크 게임 종료. \n당신의 점수는 " + GetPlayerScore();
+        button.SetActive(true);
     }
 
     private void ShieldTrackHairBand()
@@ -115,7 +124,7 @@ public class PlankMainController : MonoBehaviour
             shield.SetActive(true);
             Vector3 hairBendPos = hairband.bones[0].position + Vector3.left * 0.5f;
             shield.transform.position = hairBendPos;
-        }
+        } 
         else
         {
             shield.SetActive(false);

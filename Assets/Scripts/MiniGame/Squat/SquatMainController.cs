@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,7 @@ public class SquatMainController : MonoBehaviour
     public List<GameObject> stages; // 스테이지들을 관리하는 리스트
     public Text screenText;
     public Text scoreText;
+    public GameObject panel;
     
     private int _curStageNo; // 현재 클리어중인 스테이지 넘버
     private int _hardness; // 각스테이지별 채력
@@ -44,11 +46,13 @@ public class SquatMainController : MonoBehaviour
             mode = 1;
             Debug.Log("Game Started");
             time = 0;
+            panel.SetActive(false);
+            scoreText.text = "";
         }
         if(mode == 1)
         {
             
-            scoreText.text = "time : " + time + "s";
+            scoreText.text = string.Format("시간 : {0:F1}", time) + "s";
             if (time > time_limit)
             {
                 return;
@@ -72,6 +76,7 @@ public class SquatMainController : MonoBehaviour
             {
                 stages[i].SetActive(false);
             }
+            panel.SetActive(true);
             scoreText.text = "게임끝! 걸린시간은 " + fin_time;
         }
     }
