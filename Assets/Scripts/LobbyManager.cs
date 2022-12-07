@@ -20,7 +20,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks {
 
     private void Awake()
     {
-        DontDestroyOnLoad(this.gameObject);
         PhotonNetwork.AutomaticallySyncScene = true;
     }
 
@@ -100,7 +99,8 @@ public class LobbyManager : MonoBehaviourPunCallbacks {
 
         if (!girlButton.IsInteractable())
         {
-            PV.RPC("StartGame", RpcTarget.All);
+            PV.RPC("MakePlayer", RpcTarget.All);
+            PV.RPC("StartGame", RpcTarget.MasterClient);
         }
     }
 
@@ -112,17 +112,28 @@ public class LobbyManager : MonoBehaviourPunCallbacks {
 
         if (!boyButton.IsInteractable())
         {
-            PV.RPC("StartGame", RpcTarget.All);
+            PV.RPC("MakePlayer", RpcTarget.All);
+            PV.RPC("StartGame", RpcTarget.MasterClient);
+        }
+    }
+
+    [PunRPC]
+    private void MakePlayer()
+    {
+        if (selectedCharcter == CharacterType.Boy)
+        {
+            PhotonNetwork.Instantiate("Prefabs/PlayerBoy", new Vector3(-17.41f, 3.68f, 28.13f), new Quaternion(0f, 180f, 0f, 0f));
+        }
+        else
+        {
+            PhotonNetwork.Instantiate("Prefabs/PlayerGirl", new Vector3(-21.22f, 3.68f, 28.13f), new Quaternion(0f, 180f, 0f, 0f));
         }
     }
 
     [PunRPC]
     private void StartGame()
     {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            PhotonNetwork.LoadLevel("MainBoardGame");
-        }
+        PhotonNetwork.LoadLevel("MainBoardGame");
     }
 
     [PunRPC]

@@ -55,19 +55,25 @@ public class BoardGameManager : MonoBehaviour
     }
     [SerializeField] private BoardGameUIManager uiManager;
 
-    private PlayerState[] playerStates;
-
     private void Awake()
     {
         if (null == instance)
         {
             instance = this;
-            DontDestroyOnLoad(this.gameObject);
-            playerStates = new PlayerState[] { PlayerState.Turn, PlayerState.Waiting}; // player 두 명으로 가정, host선 강제
 
-            localPlayer = PhotonNetwork.Instantiate("Prefabs/Player", Vector3.zero, Quaternion.identity).GetComponent<Player>();
+            GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+            foreach (GameObject player in players)
+            {
+                player.transform.GetChild(0).gameObject.SetActive(true);
+                player.GetComponent<Player>().SetRail();
 
-            GameObject.Find("MainCanvas").GetComponent<BoardGameUIManager>().localPlayer = this.localPlayer;
+                if (player.GetComponent<PhotonView>().IsMine)
+                {
+                    localPlayer = player.GetComponent<Player>();
+                    localPlayer.transform.GetChild(1).gameObject.SetActive(true);
+                }
+            }
+            uiManager.localPlayer = this.localPlayer;
         }
         else
         {
@@ -95,12 +101,6 @@ public class BoardGameManager : MonoBehaviour
         {
             uiManager.DiceUIOpen();
         }
-        //if (playerStates[turnPlayerID] != PlayerState.Turn)
-        //    return;
-        //else
-        //{
-        //    uiManager.DiceUIOpen();
-        //}
     }
 
     /// <summary>
@@ -119,17 +119,31 @@ public class BoardGameManager : MonoBehaviour
         // 다음 턴이 마스터 클라이언트인 경우
         if (!PhotonNetwork.IsMasterClient)
         {
-            /// 마스터 클라이언트에게 미니게임 로드를 요청
-            PV.RPC("LoadMinigame", RpcTarget.MasterClient);
+            // 마스터 클라이언트에게 미니게임 로드를 요청
+            this.Invoke(() => PV.RPC("LoadMinigame", RpcTarget.All), 1.0f);
         }
-        // 상대방 local에서 dice panel 열림
-        PV.RPC("DiceUIOpen", RpcTarget.Others);
+        else
+        {
+            // 상대방 local에서 dice panel 열림
+            PV.RPC("DiceUIOpen", RpcTarget.Others);
+        }
     }
 
     [PunRPC]
     private void LoadMinigame()
     {
-        print("LoadMinigame");
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        foreach (GameObject player in players)
+        {
+            player.transform.GetChild(0).gameObject.SetActive(false);
+        }
+
+        localPlayer.transform.GetChild(1).gameObject.SetActive(false);
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.LoadLevel("TestMinigame");
+        }
     }
 
     [PunRPC]
