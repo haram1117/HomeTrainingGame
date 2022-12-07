@@ -3091,7 +3091,7 @@ MonoBehaviour:
   _layer:
     serializedVersion: 2
     m_Bits: 4
-  UseWebCam: 0
+  UseWebCam: 1
   WebCamIndex: 0
   VideoPlayer: {fileID: 769284634}
 --- !u!23 &1873549734
@@ -3189,7 +3189,7 @@ MonoBehaviour:
   NNModel: {fileID: 5022602860645237092, guid: 43b6e683b4fafb84a828cf2025b83b7e, type: 3}
   WorkerType: 32768
   Verbose: 0
-  VNectModel: {fileID: 0}
+  VNectModel: {fileID: 1009339738}
   videoCapture: {fileID: 1873549733}
   InputImageSize: 448
   HeatMapCol: 28
