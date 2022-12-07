@@ -23,6 +23,8 @@ public class PlankMainController : MonoBehaviour
     public GameObject panel;
     public GameObject button;
     public VNectBarracudaRunner runner;
+    public GameObject particles;
+    public LaserSoundPlayer SoundPlayer;
     
     private Mode _gameMode;
     private float _time;
@@ -60,6 +62,7 @@ public class PlankMainController : MonoBehaviour
     }
     private void PlayingGame()
     {
+        SoundPlayer.enabled = true;
         panel.SetActive(false);
         int posScore = player.GetPositionScore();
         positionScoreText.text = "플랭크 자세점수 : " + posScore;
@@ -110,12 +113,15 @@ public class PlankMainController : MonoBehaviour
 
     private void EndGame()
     {
+        SoundPlayer.enabled = false;
+
         panel.SetActive(true);
         Debug.Log("플랭크 종료");
         _gameMode = Mode.END;
         announceText.text = "플랭크 게임 종료. \n당신의 점수는 " + GetPlayerScore();
         button.SetActive(true);
         runner.enabled = false;
+        particles.SetActive(false);
     }
 
     private void ShieldTrackHairBand()
