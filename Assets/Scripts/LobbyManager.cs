@@ -1,5 +1,6 @@
 ﻿using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine;
 using UnityEngine.UI;
 
 // 마스터(매치 메이킹) 서버와 룸 접속을 담당
@@ -8,6 +9,20 @@ public class LobbyManager : MonoBehaviourPunCallbacks {
 
     public Text connectionInfoText; // 네트워크 정보를 표시할 텍스트
     public Button joinButton; // 룸 접속 버튼
+
+    public GameObject selectCharacterPanel; // 캐릭터 선택 판넬
+    public Text selectedCharacterText; // 선택한 캐릭터를 표시할 텍스트
+    public Button boyButton;
+    public Button girlButton;
+
+    public PhotonView PV;
+    public CharacterType selectedCharcter; // 사용자가 선택한 캐릭터
+
+    private void Awake()
+    {
+        DontDestroyOnLoad(this.gameObject);
+        PhotonNetwork.AutomaticallySyncScene = true;
+    }
 
     // 게임 실행과 동시에 마스터 서버 접속 시도
     private void Start() {
@@ -59,7 +74,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks {
 
         if (PhotonNetwork.CurrentRoom.PlayerCount == maxPlayer)
         {
-            PhotonNetwork.LoadLevel("MainBoardGame");
+            SelectCharcter();
         }
     }
 
@@ -68,7 +83,60 @@ public class LobbyManager : MonoBehaviourPunCallbacks {
     {
         if (PhotonNetwork.CurrentRoom.PlayerCount == maxPlayer)
         {
+            SelectCharcter();
+        }
+    }
+
+    private void SelectCharcter()
+    {
+        selectCharacterPanel.SetActive(true);
+    }
+
+    public void SelectBoy()
+    {
+        selectedCharcter = CharacterType.Boy;
+        selectedCharacterText.text = "Your Character : BOY ";
+        PV.RPC("OtherSelect", RpcTarget.Others, CharacterType.Boy);
+
+        if (!girlButton.IsInteractable())
+        {
+            PV.RPC("StartGame", RpcTarget.All);
+        }
+    }
+
+    public void SelectGirl()
+    {
+        selectedCharcter = CharacterType.Girl;
+        selectedCharacterText.text = "Your Character : GIRL ";
+        PV.RPC("OtherSelect", RpcTarget.Others, CharacterType.Girl);
+
+        if (!boyButton.IsInteractable())
+        {
+            PV.RPC("StartGame", RpcTarget.All);
+        }
+    }
+
+    [PunRPC]
+    private void StartGame()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
             PhotonNetwork.LoadLevel("MainBoardGame");
+        }
+    }
+
+    [PunRPC]
+    private void OtherSelect(CharacterType characterType)
+    {
+        if (characterType == CharacterType.Boy)
+        {
+            boyButton.interactable = false;
+            girlButton.interactable = true;
+        }
+        else
+        {
+            boyButton.interactable = true;
+            girlButton.interactable = false;
         }
     }
 }

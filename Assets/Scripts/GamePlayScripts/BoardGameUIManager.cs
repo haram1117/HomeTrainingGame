@@ -30,6 +30,8 @@ public class BoardGameUIManager : MonoBehaviour
     [Header("플레이어 스탯")] 
     [SerializeField] private TextMeshProUGUI goldNum;
     [SerializeField] private TextMeshProUGUI starNum;
+
+    public Player localPlayer;
     
     private void Awake()
     {
@@ -39,8 +41,8 @@ public class BoardGameUIManager : MonoBehaviour
 
     private void Start()
     {
-        starNum.text = Player.Instance.GetNowStar().ToString();
-        goldNum.text = Player.Instance.GetNowGold().ToString();
+        starNum.text = localPlayer.GetNowStar().ToString();
+        goldNum.text = localPlayer.GetNowGold().ToString();
     }
 
     private void Update()
@@ -116,7 +118,7 @@ public class BoardGameUIManager : MonoBehaviour
     {
         starPanel.SetActive(true);
         goldNeedText.text = $"필요한 골드 : {BoardGameManager.Instance.GetGoldValueForStar()}";
-        goldHaveText.text = $"보유한 골드 : {Player.Instance.GetNowGold()}";
+        goldHaveText.text = $"보유한 골드 : {localPlayer.GetNowGold()}";
     }
 
     /// <summary>
@@ -124,12 +126,12 @@ public class BoardGameUIManager : MonoBehaviour
     /// </summary>
     private void GetStar()
     {
-        if (Player.Instance.CanGetStar(out var playerGold))
+        if (localPlayer.CanGetStar(out var playerGold))
         {
             completeMessage.gameObject.SetActive(true);
-            starNum.text = Player.Instance.GetNowStar().ToString();
+            starNum.text = localPlayer.GetNowStar().ToString();
             goldNum.text = playerGold.ToString();
-            goldHaveText.text = $"보유한 골드 : {Player.Instance.GetNowGold()}";
+            goldHaveText.text = $"보유한 골드 : {localPlayer.GetNowGold()}";
             this.Invoke(()=>completeMessage.gameObject.SetActive(false), 0.5f);
         }
         else
@@ -140,7 +142,7 @@ public class BoardGameUIManager : MonoBehaviour
         Animator animator = starPanel.GetComponent<Animator>();
         animator.SetTrigger(CloseTrigger);
         this.Invoke(()=>starPanel.gameObject.SetActive(false), 0.8f);
-        this.Invoke(()=>Player.Instance.TurnFinish(), 1.0f);
+        this.Invoke(()=>localPlayer.TurnFinish(), 1.0f);
         BoardGameManager.Instance.GoToNextLevelStar();
         BoardGameManager.Instance.StarRandomGenerate();
     }

@@ -1,3 +1,5 @@
+using Photon.Pun;
+using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,11 +24,6 @@ public class BoardGameManager : MonoBehaviour
     // TODO: 스타에 플레이어 도달 시 Gold 이용해서 사고 팔 수 있는 기능 (총 턴에 비례하는 골드필요량 지정)
 
     /// <summary>
-    /// 현재 주사위를 던질 턴의 player id
-    /// </summary>
-    private int turnPlayerID;
-
-    /// <summary>
     /// 현재 star의 위치 (0 ~ 15)
     /// </summary>
     public int starIndex;
@@ -40,6 +37,8 @@ public class BoardGameManager : MonoBehaviour
     [SerializeField] private Transform[] stages;
 
     [SerializeField] private GameObject starPrefab;
+
+    [SerializeField] private PhotonView PV;
 
     private GameObject starObject;
     
@@ -65,6 +64,10 @@ public class BoardGameManager : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(this.gameObject);
             playerStates = new PlayerState[] { PlayerState.Turn, PlayerState.Waiting}; // player 두 명으로 가정, host선 강제
+
+            localPlayer = PhotonNetwork.Instantiate("Prefabs/Player", Vector3.zero, Quaternion.identity).GetComponent<Player>();
+
+            GameObject.Find("MainCanvas").GetComponent<BoardGameUIManager>().localPlayer = this.localPlayer;
         }
         else
         {
@@ -88,12 +91,16 @@ public class BoardGameManager : MonoBehaviour
     /// </summary>
     private void GameStart()
     {
-        if (playerStates[turnPlayerID] != PlayerState.Turn)
-            return;
-        else
+        if (PhotonNetwork.IsMasterClient)
         {
             uiManager.DiceUIOpen();
         }
+        //if (playerStates[turnPlayerID] != PlayerState.Turn)
+        //    return;
+        //else
+        //{
+        //    uiManager.DiceUIOpen();
+        //}
     }
 
     /// <summary>
@@ -105,23 +112,30 @@ public class BoardGameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 다움 턴 player ID 설정
-    /// </summary>
-    public void SetNextPlayer()
-    {
-        turnPlayerID = (turnPlayerID == 0) ? 1 : 0;
-        if (turnPlayerID == 0) // TODO: 서로의 턴이 지나갔을 때 -> 미니게임 Start
-        {
-            
-        }
-    }
-
-    /// <summary>
     /// 다음 사람 턴 시작 
     /// </summary>
     public void DoNextTurn()
     {
-        uiManager.DiceUIOpen(); // TODO: RPC target.Others로 상대방 local에서 dice panel 열어지도록
+        // 다음 턴이 마스터 클라이언트인 경우
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            /// 마스터 클라이언트에게 미니게임 로드를 요청
+            PV.RPC("LoadMinigame", RpcTarget.MasterClient);
+        }
+        // 상대방 local에서 dice panel 열림
+        PV.RPC("DiceUIOpen", RpcTarget.Others);
+    }
+
+    [PunRPC]
+    private void LoadMinigame()
+    {
+        print("LoadMinigame");
+    }
+
+    [PunRPC]
+    private void DiceUIOpen()
+    {
+        uiManager.DiceUIOpen();
     }
 
     public void StarRandomGenerate()
@@ -162,5 +176,4 @@ public class BoardGameManager : MonoBehaviour
     {
         starLevelIndex++;
     }
-
 }
