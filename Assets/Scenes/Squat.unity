@@ -632,7 +632,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SkeletonMaterial: {fileID: 2100000, guid: f8188c9479a7aad41b7448fe5eeed839, type: 2}
-  ShowSkeleton: 1
+  ShowSkeleton: 0
   SkeletonX: -1
   SkeletonY: 0.9
   SkeletonZ: 0
@@ -2629,6 +2629,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Prefab_BigBarrel_color01
       objectReference: {fileID: 0}
+    - target: {fileID: 1964431040936758, guid: ae95d385019def448981b67e58f4dcc2, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4529784397573094, guid: ae95d385019def448981b67e58f4dcc2, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -3538,7 +3542,7 @@ MonoBehaviour:
   panel: {fileID: 2024782609}
   gameFinBtn: {fileID: 12942477}
   runner: {fileID: 1917188065}
-  damage: 10
+  damage: 1
 --- !u!4 &1942834165
 Transform:
   m_ObjectHideFlags: 0
