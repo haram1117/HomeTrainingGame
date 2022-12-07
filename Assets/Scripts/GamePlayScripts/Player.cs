@@ -258,7 +258,6 @@ public class Player : MonoBehaviour, IPunObservable
     {
         // 턴 종료 flag
         isJumpingCompleted = true;
-        BoardGameManager.Instance.SetNextPlayer();
         BoardGameManager.Instance.DoNextTurn();
     }
 

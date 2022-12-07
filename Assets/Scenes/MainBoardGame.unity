@@ -1512,6 +1512,7 @@ MonoBehaviour:
   completeMessage: {fileID: 1326134861}
   goldNum: {fileID: 748383628}
   starNum: {fileID: 1818904397}
+  localPlayer: {fileID: 0}
 --- !u!1 &482747287
 GameObject:
   m_ObjectHideFlags: 0
@@ -5408,6 +5409,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1622380867}
   - component: {fileID: 1622380868}
+  - component: {fileID: 1622380869}
   m_Layer: 0
   m_Name: BoardGameManager
   m_TagString: Untagged
@@ -5446,7 +5448,31 @@ MonoBehaviour:
   localPlayer: {fileID: 0}
   stages: []
   starPrefab: {fileID: 1000010986879176, guid: 8f226a393243a0141bace5fd6b60bafa, type: 3}
+  PV: {fileID: 1622380869}
   uiManager: {fileID: 454303561}
+--- !u!114 &1622380869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1622380866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 1622380868}
+  sceneViewId: 2
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &1635651209
 GameObject:
   m_ObjectHideFlags: 0
