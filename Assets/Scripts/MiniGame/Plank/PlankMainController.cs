@@ -22,7 +22,7 @@ public class PlankMainController : MonoBehaviour
     public Text positionScoreText;
     public GameObject panel;
     public GameObject button;
-
+    public VNectBarracudaRunner runner;
     
     private Mode _gameMode;
     private float _time;
@@ -115,6 +115,7 @@ public class PlankMainController : MonoBehaviour
         _gameMode = Mode.END;
         announceText.text = "플랭크 게임 종료. \n당신의 점수는 " + GetPlayerScore();
         button.SetActive(true);
+        runner.enabled = false;
     }
 
     private void ShieldTrackHairBand()
@@ -139,7 +140,14 @@ public class PlankMainController : MonoBehaviour
     {
         return _health - _time;
     }
-    
-    
 
+
+    /// <summary>
+    /// 게임이 끝나고 누를 버튼.
+    /// </summary>
+    public void FinishBtnOnClick()
+    {
+        // result는 크면 클수록 잘한 겁니다.
+        float result = GetPlayerScore();
+    }
 }

@@ -14,7 +14,10 @@ public class SquatMainController : MonoBehaviour
     public Text screenText;
     public Text scoreText;
     public GameObject panel;
-    
+    public GameObject gameFinBtn;
+    public VNectBarracudaRunner runner;
+    public int damage;
+
     private int _curStageNo; // 현재 클리어중인 스테이지 넘버
     private int _hardness; // 각스테이지별 채력
     private int _n_squatted;
@@ -27,9 +30,10 @@ public class SquatMainController : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
+        gameFinBtn.SetActive(false);
         mode = 0;
         screenText.text = "스쿼트를 준비해 주세요.";
-        time_limit = 40 * 1000;
+        time_limit = 200;
         _curStageNo = 0;
         _hardness = 10;
         time = 0;
@@ -61,7 +65,6 @@ public class SquatMainController : MonoBehaviour
             if (player.didSquat())
             {
                 print("squated");
-                int damage = player.damage;
                 if (wifiController.isEventExist())
                     damage *= 2;
                 DigAttack(damage);
@@ -70,17 +73,23 @@ public class SquatMainController : MonoBehaviour
 
         if (mode == 2)
         {
-            //Game Finished;
-            
-            for(int i =0; i<stages.Count; i++)
-            {
-                stages[i].SetActive(false);
-            }
-            panel.SetActive(true);
-            scoreText.text = "게임끝! 걸린시간은 " + fin_time;
+            return;
         }
     }
-
+    
+    //Game Finished;
+    private void EndGame()
+    {
+        for(int i =0; i<stages.Count; i++)
+        {
+            stages[i].SetActive(false);
+        }
+        panel.SetActive(true);
+        runner.enabled= false;
+        gameFinBtn.SetActive(true);
+        scoreText.text = "게임끝! 걸린시간은 " + fin_time;
+    }
+    
     // 현재 스테이지에 데미지를 입히고, 스테이지가 넘어갈 경우 다음 스테이지로 설정함.
     private bool DigAttack(int damage)  
     {
@@ -106,6 +115,7 @@ public class SquatMainController : MonoBehaviour
             fin_time = time;
             mode = 2;
             screenText.text = "Game Finished\nYour Score is " + time;
+            EndGame();
         }
         _hardness = _curStageNo * 2;
     }
@@ -128,16 +138,17 @@ public class SquatMainController : MonoBehaviour
         }
     }
 
-    // 게임 결과를 리턴하는 함수.
-    // TODO: 시간 측정을 만들어서 리턴해야할듯.
-    public int result()
+    public float GetPlayerScore()
     {
-        // TODO : return the score of played mini game
-        return _curStageNo;
+        return time_limit - fin_time;
     }
-
-    public float GetFinTime()
+    
+    /// <summary>
+    /// 게임이 끝나고 누를 버튼.
+    /// </summary>
+    public void FinishBtnOnClick()
     {
-        return fin_time;
+        // result는 크면 클수록 잘한 겁니다.
+        float result = GetPlayerScore();
     }
 }
