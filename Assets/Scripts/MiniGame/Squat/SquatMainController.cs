@@ -10,7 +10,6 @@ public class SquatMainController : MonoBehaviour
 {
     //0 for ready, 1 for playing, 2 for end
     public static int mode;
-    public WifiSessionController wifiController;
     public SquatPlayer player; // 현재 게임을 진행중인 플레이어.
     public List<GameObject> stages; // 스테이지들을 관리하는 리스트
     public Text screenText;
@@ -29,10 +28,12 @@ public class SquatMainController : MonoBehaviour
     private float time_limit;
     private float fin_time;
     private float ready_time = 10;
+    private WifiSessionController wifiController;
 
     // Start is called before the first frame update
     private void Start()
     {
+        wifiController = WifiSessionController.getInstance();
         DontDestroyOnLoad(this.gameObject);
         gameFinBtn.SetActive(false);
         mode = 0;

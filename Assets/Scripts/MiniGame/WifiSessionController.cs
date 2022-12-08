@@ -7,11 +7,11 @@ using System.Text;
 using System.Threading;
 using UnityEngine;
 
-public class WifiSessionController : MonoBehaviour
+public class WifiSessionController 
 {
-    public String myIp;
-    public int port;
-    
+    public String myIp = "127.0.0.1";
+    public int port = 3000;
+    private static WifiSessionController wifiSessionController;
     
     #region private members 	
     /// <summary> 	
@@ -34,21 +34,26 @@ public class WifiSessionController : MonoBehaviour
     private bool hasEvent;
     #endregion 	
     
-    // Start is called before the first frame update
-    void Start()
+
+    private WifiSessionController()
     {
+        
+        wifiSessionController = this;
         hasEvent = false;
         tcpListenerThread = new Thread(Listen);
         tcpListenerThread.IsBackground = true;
         tcpListenerThread.Start();
     }
 
-    // Update is called once per frame
-    void Update()
+    public static WifiSessionController getInstance()
     {
-        
-    }
+        if (null == wifiSessionController)
+        {
+            wifiSessionController = new WifiSessionController();
+        }
 
+        return wifiSessionController;
+    }
     public bool isEventExist()
     {
         bool result = hasEvent;
