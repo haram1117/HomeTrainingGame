@@ -122,11 +122,11 @@ public class LobbyManager : MonoBehaviourPunCallbacks {
     {
         if (selectedCharcter == CharacterType.Boy)
         {
-            PhotonNetwork.Instantiate("Prefabs/PlayerBoy", new Vector3(-17.41f, 3.68f, 28.13f), Quaternion.Euler(0f, 180f, 0f));
+            PhotonNetwork.Instantiate("Resources/Prefabs/PlayerBoy", new Vector3(-17.41f, 3.68f, 28.13f), Quaternion.Euler(0f, 180f, 0f));
         }
         else
         {
-            PhotonNetwork.Instantiate("Prefabs/PlayerGirl", new Vector3(-21.22f, 3.68f, 28.13f), Quaternion.Euler(0f, 180f, 0f));
+            PhotonNetwork.Instantiate("Resources/Prefabs/PlayerGirl", new Vector3(-21.22f, 3.68f, 28.13f), Quaternion.Euler(0f, 180f, 0f));
         }
     }
 

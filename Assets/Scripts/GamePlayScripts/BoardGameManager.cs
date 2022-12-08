@@ -65,7 +65,6 @@ public class BoardGameManager : MonoBehaviour
         {
             instance = this;
 
-            localPlayer = PhotonNetwork.Instantiate("Prefabs/Player", Vector3.zero, Quaternion.identity).GetComponent<Player>();
             remainTurn = 10;
             // 플레이어 설정
             GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
