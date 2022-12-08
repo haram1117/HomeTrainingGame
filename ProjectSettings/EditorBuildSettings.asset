@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Plank.unity
     guid: feb4c13a8b90b2b4a8858dc7f7ade72d
+  - enabled: 1
+    path: Assets/Scenes/Squat.unity
+    guid: 26290625e6cb74759928e4baec85d443
   m_configObjects: {}
