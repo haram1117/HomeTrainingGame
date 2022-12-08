@@ -125,7 +125,7 @@ public class BoardGameManager : MonoBehaviour
 
         if (PhotonNetwork.IsMasterClient)
         {
-            PhotonNetwork.LoadLevel("TestMinigame");
+            PhotonNetwork.LoadLevel("Plank");
         }
     }
 

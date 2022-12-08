@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TestMinigame.unity
     guid: 26def60ee68bf394389339e7816f59d9
+  - enabled: 1
+    path: Assets/Scenes/Plank.unity
+    guid: feb4c13a8b90b2b4a8858dc7f7ade72d
   m_configObjects: {}
