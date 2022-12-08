@@ -10,6 +10,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks {
     public Text connectionInfoText; // 네트워크 정보를 표시할 텍스트
     public Button joinButton; // 룸 접속 버튼
 
+    public GameObject mainPanel; // 메이 판넬
     public GameObject selectCharacterPanel; // 캐릭터 선택 판넬
     public Text selectedCharacterText; // 선택한 캐릭터를 표시할 텍스트
     public Button boyButton;
@@ -89,6 +90,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks {
 
     private void SelectCharcter()
     {
+        mainPanel.SetActive(false);
         selectCharacterPanel.SetActive(true);
     }
 
