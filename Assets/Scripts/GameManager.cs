@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     public Player localPlayer;
     public Player otherPlayer;
 
-    public int remainTurn = 10;
+    public int remainTurn = 1;
 
     private static GameManager instance = null;
 

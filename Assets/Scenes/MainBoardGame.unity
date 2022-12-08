@@ -6151,7 +6151,6 @@ MonoBehaviour:
   OtherPlayer: {fileID: 0}
   stages: []
   PV: {fileID: 1559946214}
-  remainTurn: 0
   uiManager: {fileID: 454303561}
 --- !u!4 &1559946216
 Transform:
@@ -6621,7 +6620,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1746915014
 RectTransform:
   m_ObjectHideFlags: 0

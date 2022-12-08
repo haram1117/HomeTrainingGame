@@ -61,7 +61,7 @@ public class Player : MonoBehaviour, IPunObservable
     /// <summary>
     /// Player의 캐릭터 타입
     /// </summary>
-    [SerializeField] private CharacterType characterType;
+    public CharacterType characterType;
 
     /// <summary>
     /// 주사위 후 최종 목표위치가 star 위치일 때 true

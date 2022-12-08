@@ -123,15 +123,15 @@ public class BoardGameManager : MonoBehaviour
 
         if (PhotonNetwork.IsMasterClient)
         {
-            // PhotonNetwork.LoadLevel("TestMinigame");
-            if (GameManager.Instance.remainTurn % 2 == 1)
+            PhotonNetwork.LoadLevel("TestMinigame");
+            /*if (GameManager.Instance.remainTurn % 2 == 1)
             {
                 PhotonNetwork.LoadLevel("Plank");
             }
             else
             {
                 PhotonNetwork.LoadLevel("Squat");
-            }
+            }*/
         }
     }
 

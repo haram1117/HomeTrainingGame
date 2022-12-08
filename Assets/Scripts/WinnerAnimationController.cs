@@ -10,8 +10,17 @@ public class WinnerAnimationController : MonoBehaviour
 
     void Start()
     {
-
-        //girl.GetComponent<Animator>().SetTrigger()
+        Player[] players = GameManager.Instance.GetWinnerAndLoser();
+        if(players[0].characterType == CharacterType.Boy)
+        {
+            boy.GetComponent<Animator>().SetTrigger("WinTrigger");
+            girl.GetComponent<Animator>().SetTrigger("LoseTrigger");
+        }
+        else
+        {
+            boy.GetComponent<Animator>().SetTrigger("LoseTrigger");
+            girl.GetComponent<Animator>().SetTrigger("WinTrigger");
+        }
     }
 
     // Update is called once per frame

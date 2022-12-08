@@ -793,7 +793,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &973554009
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1579,7 +1579,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1535236574
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1720,6 +1720,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1664493552}
   - component: {fileID: 1664493553}
+  - component: {fileID: 1664493554}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1753,8 +1754,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3f545b799143a440abeede0dac6a350, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PV: {fileID: 0}
   localPlayer: {fileID: 0}
   otherPlayer: {fileID: 0}
+  remainTurn: 2
+--- !u!114 &1664493554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664493551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 267
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &1860278248
 GameObject:
   m_ObjectHideFlags: 0
