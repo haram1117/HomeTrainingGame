@@ -12,7 +12,6 @@ enum Mode{
 }
 public class PlankMainController : MonoBehaviour
 {
-    public WifiSessionController wifiController;
     public PlankPlayer player; // 현재 게임을 진행중인 플레이어.
     public GameObject shield;
     public SkinnedMeshRenderer hairband;
@@ -31,11 +30,12 @@ public class PlankMainController : MonoBehaviour
     private Mode _gameMode;
     private float _time;
     private int _health;
-
+    private WifiSessionController wifiController;
     private float _prevtime;
     
     public void Start()
     {
+        wifiController = WifiSessionController.getInstance();
         DontDestroyOnLoad(this.gameObject);
         StartGame();
         button.SetActive(false);
