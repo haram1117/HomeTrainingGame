@@ -28,6 +28,12 @@ public class BoardGameUIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI warningMessage;
     [SerializeField] private TextMeshProUGUI completeMessage;
 
+    [Header("미니게임 점수 관련 UI")]
+    [SerializeField] private GameObject resultPanel;
+    [SerializeField] private Button closeResultBtn;
+    [SerializeField] private TextMeshProUGUI myScoreText;
+    [SerializeField] private TextMeshProUGUI otherScoreText;
+    [SerializeField] private TextMeshProUGUI takeGoldText;
 
     [Header("플레이어 스탯")] 
     [SerializeField] private TextMeshProUGUI goldNum;
@@ -44,9 +50,15 @@ public class BoardGameUIManager : MonoBehaviour
 
         diceRollBtn.onClick.AddListener(DiceRoll);
         starGetBtn.onClick.AddListener(GetStar);
+        closeResultBtn.onClick.AddListener(ResultUIClose);
     }
 
     private void Start()
+    {
+        UpdateInfo();
+    }
+
+    private void UpdateInfo()
     {
         starNum.text = localPlayer.GetNowStar().ToString();
         goldNum.text = localPlayer.GetNowGold().ToString();
@@ -158,13 +170,46 @@ public class BoardGameUIManager : MonoBehaviour
         this.Invoke(()=>localPlayer.TurnFinish(), 1.0f);
     }
 
+    /// <summary>
+    /// result UI Open
+    /// </summary>
     public void ResultUIOpen()
     {
-        print(localPlayer.lastScore);
-        print(otherPlayer.lastScore);
+        resultPanel.SetActive(true);
+        myScoreText.text = $"내 점수 : {localPlayer.lastScore}";
+        otherScoreText.text = $"상대 점수 : {otherPlayer.lastScore}";
+
+        int reward = CalculateReward();
+        takeGoldText.text = $"{reward} 골드를 얻었습니다!";
+        localPlayer.TakeGold(reward);
+    }
+
+    /// <summary>
+    /// Close result UI
+    /// </summary>
+    private void ResultUIClose()
+    {
+        UpdateInfo();
+
+        Animator animator = resultPanel.GetComponent<Animator>();
+        animator.SetTrigger(CloseTrigger);
+        this.Invoke(() => resultPanel.SetActive(false), 0.5f);
+
         if (PhotonNetwork.IsMasterClient)
         {
             DiceUIOpen();
+        }
+    }
+
+    private int CalculateReward()
+    {
+        if (localPlayer.lastScore >= otherPlayer.lastScore)
+        {
+            return (int)BoardGameManager.Instance.GetGoldValueForStar() / 2;
+        }
+        else
+        {
+            return (int)BoardGameManager.Instance.GetGoldValueForStar() / 5;
         }
     }
 }

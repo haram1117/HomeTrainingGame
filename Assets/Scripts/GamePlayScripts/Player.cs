@@ -248,6 +248,11 @@ public class Player : MonoBehaviour, IPunObservable
         }
     }
 
+    public void TakeGold(int Gold)
+    {
+        this.goldCount += Gold;
+    }
+
     [PunRPC]
     private void SetTriggerRPC(int Trigger)
     {
