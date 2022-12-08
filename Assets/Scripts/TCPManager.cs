@@ -11,7 +11,7 @@ using UniJSON;
 public class TCPManager : MonoBehaviour
 {
     TcpClient client;
-    string serverIP = "192.168.35.243";
+    string serverIP = "127.0.0.1";
     int port = 8000;
     byte[] receivedBuffer;
     // StreamReader reader;
