@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Squat.unity
     guid: 26290625e6cb74759928e4baec85d443
+  - enabled: 1
+    path: Assets/Scenes/Winner.unity
+    guid: 782ca3241866045f48520d742f35fcc4
   m_configObjects: {}

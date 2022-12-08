@@ -1,3 +1,5 @@
+using Photon.Pun;
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,6 +23,7 @@ public class WinnerAnimationController : MonoBehaviour
             boy.GetComponent<Animator>().SetTrigger("LoseTrigger");
             girl.GetComponent<Animator>().SetTrigger("WinTrigger");
         }
+        PhotonNetwork.Destroy(GameManager.Instance.localPlayer.gameObject);
     }
 
     // Update is called once per frame
