@@ -19,6 +19,29 @@ public class TCPManager : MonoBehaviour
     NetworkStream stream;
     public Vector2 cursorPosition;
     public bool isMouseClicked;
+    private static TCPManager instance = null;
+    public static TCPManager Instance
+    {
+        get
+        {
+            if (null == instance)
+                return null;
+            return instance;
+        }
+    }
+
+    private void Awake()
+    {
+        if (null == instance)
+        {
+            instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
