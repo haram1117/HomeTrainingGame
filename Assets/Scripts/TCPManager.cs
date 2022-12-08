@@ -6,6 +6,7 @@ using System.Text;
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using UniJSON;
 
 public class TCPManager : MonoBehaviour
 {
@@ -36,10 +37,10 @@ public class TCPManager : MonoBehaviour
                 receivedBuffer = new byte[100];
                 stream.Read(receivedBuffer, 0, receivedBuffer.Length);
                 string msg = Encoding.UTF8.GetString(receivedBuffer, 0, receivedBuffer.Length); // byte[] to string
-                Debug.Log(msg);
+                // Debug.Log(msg);
                 if (msg.Contains("isClosed"))
                 {
-                    isMouseClicked = msg.Split(' ')[1] == "True";
+                    isMouseClicked = msg.Contains("True");
                 }
                 else if (msg.Contains("x:"))
                 {
@@ -71,7 +72,6 @@ public class TCPManager : MonoBehaviour
         {
             Debug.Log("On client connect exception " + e);
         }
-
     }
 
     void OnApplicationQuit()
@@ -82,7 +82,6 @@ public class TCPManager : MonoBehaviour
     void CloseSocket()
     {
         if (!socketReady) return;
-
         // reader.Close();
         client.Close();
         socketReady = false;

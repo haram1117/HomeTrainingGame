@@ -32,6 +32,7 @@ public class BoardGameUIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI starNum;
 
     public Player localPlayer;
+    [SerializeField] private TextMeshProUGUI turnNum;
     
     private void Awake()
     {
@@ -43,8 +44,13 @@ public class BoardGameUIManager : MonoBehaviour
     {
         starNum.text = localPlayer.GetNowStar().ToString();
         goldNum.text = localPlayer.GetNowGold().ToString();
+        turnNum.text = BoardGameManager.Instance.remainTurn.ToString();
     }
 
+    public void SetRemainTurn(int value)
+    {
+        turnNum.text = value.ToString();
+    }
     private void Update()
     {
     }

@@ -41,6 +41,8 @@ public class BoardGameManager : MonoBehaviour
     [SerializeField] private PhotonView PV;
 
     private GameObject starObject;
+
+    public int remainTurn;
     
     private int[] starLevel = { 10, 20, 30, 40, 50, 60, 70 };
     
@@ -66,7 +68,7 @@ public class BoardGameManager : MonoBehaviour
             playerStates = new PlayerState[] { PlayerState.Turn, PlayerState.Waiting}; // player 두 명으로 가정, host선 강제
 
             localPlayer = PhotonNetwork.Instantiate("Prefabs/Player", Vector3.zero, Quaternion.identity).GetComponent<Player>();
-
+            remainTurn = 10;
             GameObject.Find("MainCanvas").GetComponent<BoardGameUIManager>().localPlayer = this.localPlayer;
         }
         else
@@ -119,11 +121,13 @@ public class BoardGameManager : MonoBehaviour
         // 다음 턴이 마스터 클라이언트인 경우
         if (!PhotonNetwork.IsMasterClient)
         {
-            /// 마스터 클라이언트에게 미니게임 로드를 요청
-            PV.RPC("LoadMinigame", RpcTarget.MasterClient);
+            remainTurn--;
+            uiManager.SetRemainTurn(remainTurn);
+            // 마스터 클라이언트에게 미니게임 로드를 요청
+            PV.RPC(nameof(LoadMinigame), RpcTarget.MasterClient);
         }
         // 상대방 local에서 dice panel 열림
-        PV.RPC("DiceUIOpen", RpcTarget.Others);
+        PV.RPC(nameof(DiceUIOpen), RpcTarget.Others);
     }
 
     [PunRPC]
