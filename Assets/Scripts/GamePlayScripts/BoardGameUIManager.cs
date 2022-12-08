@@ -38,6 +38,8 @@ public class BoardGameUIManager : MonoBehaviour
     [Header("플레이어 스탯")] 
     [SerializeField] private TextMeshProUGUI goldNum;
     [SerializeField] private TextMeshProUGUI starNum;
+    [SerializeField] private TextMeshProUGUI otherGoldNum;
+    [SerializeField] private TextMeshProUGUI otherStarNum;
 
     private Player localPlayer;
     private Player otherPlayer;
@@ -62,6 +64,8 @@ public class BoardGameUIManager : MonoBehaviour
     {
         starNum.text = localPlayer.GetNowStar().ToString();
         goldNum.text = localPlayer.GetNowGold().ToString();
+        otherStarNum.text = otherPlayer.GetNowStar().ToString();
+        otherGoldNum.text = otherPlayer.GetNowGold().ToString();
         turnNum.text = GameManager.Instance.remainTurn.ToString();
     }
 
