@@ -142,9 +142,8 @@ public class BoardGameUIManager : MonoBehaviour
         Animator animator = starPanel.GetComponent<Animator>();
         animator.SetTrigger(CloseTrigger);
         this.Invoke(()=>starPanel.gameObject.SetActive(false), 0.8f);
+        BoardGameManager.Instance.StarGenerateFromUi();
         this.Invoke(()=>localPlayer.TurnFinish(), 1.0f);
-        BoardGameManager.Instance.GoToNextLevelStar();
-        BoardGameManager.Instance.StarRandomGenerate();
     }
 }
 

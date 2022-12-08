@@ -156,16 +156,12 @@ public class Player : MonoBehaviour, IPunObservable
                     else 
                     {
                         // 플레이어가 가야하는 마지막 칸이 Star가 있는 칸인 경우
-                        if ((int)Math.Truncate((double)currentSeg / 2) == BoardGameManager.Instance.starIndex)
+                        if ((int)Math.Truncate((double)currentSeg / 2) == Star.Instance.starIndex)
                         {
                             BoardGameManager.Instance.PlayerGetStar();
                         }
                         else
                         {
-                            // // 턴 종료 flag
-                            // isJumpingCompleted = true;
-                            // BoardGameManager.Instance.SetNextPlayer();
-                            // BoardGameManager.Instance.DoNextTurn();
                             TurnFinish();
                         }
                     }

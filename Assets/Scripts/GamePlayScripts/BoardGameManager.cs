@@ -23,24 +23,11 @@ public class BoardGameManager : MonoBehaviour
 
     // TODO: 스타에 플레이어 도달 시 Gold 이용해서 사고 팔 수 있는 기능 (총 턴에 비례하는 골드필요량 지정)
 
-    /// <summary>
-    /// 현재 star의 위치 (0 ~ 15)
-    /// </summary>
-    public int starIndex;
-
-    /// <summary>
-    /// 현재 star level index (gold value)
-    /// </summary>
-    public int starLevelIndex;
     [SerializeField] private Player localPlayer;
 
     [SerializeField] private Transform[] stages;
 
-    [SerializeField] private GameObject starPrefab;
-
     [SerializeField] private PhotonView PV;
-
-    private GameObject starObject;
     
     private int[] starLevel = { 10, 20, 30, 40, 50, 60, 70 };
     
@@ -61,6 +48,7 @@ public class BoardGameManager : MonoBehaviour
         {
             instance = this;
 
+            // 플레이어 설정
             GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
             foreach (GameObject player in players)
             {
@@ -88,7 +76,13 @@ public class BoardGameManager : MonoBehaviour
         {
             stages[i] = GameObject.Find($"Stage{i}").transform;
         }
-        StarRandomGenerate();
+
+        // 스타가 없을 경우 생성
+        if (null == Star.Instance && PhotonNetwork.IsMasterClient)
+        {
+            StarRandomGenerate();
+        }
+
         GameStart();
     }
 
@@ -152,17 +146,31 @@ public class BoardGameManager : MonoBehaviour
         uiManager.DiceUIOpen();
     }
 
-    public void StarRandomGenerate()
+    public void StarGenerateFromUi()
     {
-        if (starObject)
+        PV.RPC("StarRandomGenerate", RpcTarget.MasterClient);
+    }
+
+    [PunRPC]
+    private void StarRandomGenerate()
+    {
+        int prevLevel = -1;
+        if (Star.Instance)
         {
-            Destroy(starObject);
+            prevLevel = Star.Instance.starLevelIndex;
+            PhotonNetwork.Destroy(Star.Instance.gameObject);
         }
-        int randomStage = Random.Range(0, 16);
+        int randomStage = Random.Range(1, 16);
         Vector3 starLocation = new Vector3(stages[randomStage].position.x, stages[randomStage].position.y + 5.0f,
             stages[randomStage].position.z);
-        starObject = Instantiate(starPrefab, starLocation, starPrefab.transform.localRotation);
-        starIndex = randomStage;
+        this.Invoke(() => StarGenerate(starLocation, randomStage, prevLevel + 1), 1.0f);
+    }
+
+    private void StarGenerate(Vector3 starLocation, int starIndex, int starLevelIndex)
+    {
+        PhotonNetwork.Instantiate("Prefabs/SoftStar", starLocation, Quaternion.Euler(-90f, 0f, 0f));
+        Star.Instance.starIndex = starIndex;
+        Star.Instance.starLevelIndex = starLevelIndex;
     }
 
     /// <summary>
@@ -172,7 +180,6 @@ public class BoardGameManager : MonoBehaviour
     {
         // star UI
         uiManager.StarUIOpen();
-       
     }
 
     /// <summary>
@@ -180,14 +187,6 @@ public class BoardGameManager : MonoBehaviour
     /// </summary>
     public int GetGoldValueForStar()
     {
-        return starLevel[starLevelIndex];
-    }
-
-    /// <summary>
-    /// 다음 스타 레벨로 
-    /// </summary>
-    public void GoToNextLevelStar()
-    {
-        starLevelIndex++;
+        return starLevel[Star.Instance.starLevelIndex];
     }
 }
