@@ -21,7 +21,7 @@ public class Player : MonoBehaviour, IPunObservable
     /// <summary>
     /// 보유 중인 Gold 개수
     /// </summary>
-    private int goldCount = 40;
+    private int goldCount = 10;
 
     /// <summary>
     /// 이번 턴에서 수행한 Dice Rolling Value

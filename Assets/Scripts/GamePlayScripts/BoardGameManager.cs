@@ -30,8 +30,6 @@ public class BoardGameManager : MonoBehaviour
     [SerializeField] private Transform[] stages;
 
     [SerializeField] private PhotonView PV;
-    
-    public int remainTurn;
 
     private int[] starLevel = { 10, 20, 30, 40, 50, 60, 70 };
     
@@ -51,8 +49,6 @@ public class BoardGameManager : MonoBehaviour
         if (null == instance)
         {
             instance = this;
-
-            remainTurn = 10;
             stages = new Transform[16];
             for (int i = 0; i < 16; i++)
             {
@@ -121,13 +117,21 @@ public class BoardGameManager : MonoBehaviour
     [PunRPC]
     private void LoadMinigame()
     {
+        GameManager.Instance.remainTurn--;
+
         SetActiveObjects(false);
 
         if (PhotonNetwork.IsMasterClient)
         {
-            PhotonNetwork.LoadLevel("TestMinigame");
-            // PhotonNetwork.LoadLevel("Plank");
-            // PhotonNetwork.LoadLevel("Squat");
+            // PhotonNetwork.LoadLevel("TestMinigame");
+            if (GameManager.Instance.remainTurn % 2 == 1)
+            {
+                PhotonNetwork.LoadLevel("Plank");
+            }
+            else
+            {
+                PhotonNetwork.LoadLevel("Squat");
+            }
         }
     }
 
