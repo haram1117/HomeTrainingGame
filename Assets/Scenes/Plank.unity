@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 56c9ed5ee739a324e8d8bdb9613f4890, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: a866f50f784f4c447ae3b01d6aa4b50a, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.01532289, g: 0.008514756, b: 0.017135702, a: 1}
+  m_IndirectSpecularColor: {r: 0.20837422, g: 0.20837422, b: 0.20837422, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -570,8 +570,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 379537654}
-  - component: {fileID: 379537653}
   - component: {fileID: 379537652}
+  - component: {fileID: 379537653}
   m_Layer: 0
   m_Name: bgmPlayer
   m_TagString: Untagged
@@ -684,11 +684,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 379537651}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9b3d4cc19a20f2488d3fe2c86ab26b5, type: 3}
+  m_Script: {fileID: 11500000, guid: e01e21ad76395b84c91a38b3e38050f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 379537652}
-  bgm: {fileID: 8300000, guid: 1b1ed3d71ee0aa54fbdbf0657b292844, type: 3}
+  bgm: {fileID: 8300000, guid: 051111baa5c58b24f955b4eda7a5d3a7, type: 3}
 --- !u!4 &379537654
 Transform:
   m_ObjectHideFlags: 0
@@ -1509,9 +1509,9 @@ RectTransform:
   m_Father: {fileID: 1952073993}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -400.6, y: 270}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 227.4, y: -47}
   m_SizeDelta: {x: 320, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &801994035
@@ -2356,9 +2356,9 @@ RectTransform:
   m_Father: {fileID: 1952073993}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 16, y: 270}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 16, y: -47}
   m_SizeDelta: {x: 300, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1587635597
@@ -2414,8 +2414,8 @@ GameObject:
   - component: {fileID: 1614184788}
   - component: {fileID: 1614184787}
   - component: {fileID: 1614184786}
-  - component: {fileID: 1614184790}
   - component: {fileID: 1614184789}
+  - component: {fileID: 1614184790}
   m_Layer: 0
   m_Name: Particle System
   m_TagString: Untagged
@@ -7220,7 +7220,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: c9bb4171cafd3dd47829336ea4c8d988, type: 3}
+  m_audioClip: {fileID: 8300000, guid: cccb7687f3f969c4bb5f57efc181177b, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.68
   m_Pitch: 1
@@ -7315,11 +7315,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1614184785}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b21c64543a2beb84b9f6b087200eff19, type: 3}
+  m_Script: {fileID: 11500000, guid: 910926ef5ae05804a9660e392b30a7b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 1614184789}
-  bgm: {fileID: 8300000, guid: c9bb4171cafd3dd47829336ea4c8d988, type: 3}
+  bgm: {fileID: 8300000, guid: cccb7687f3f969c4bb5f57efc181177b, type: 3}
 --- !u!1 &1614888186 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8315583863143335206, guid: 376f47ea3b23a0c4390f513d69e1ca66, type: 3}
@@ -7601,9 +7601,9 @@ RectTransform:
   m_Father: {fileID: 1952073993}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 470, y: 270}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -159, y: -47}
   m_SizeDelta: {x: 160, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1705750619
@@ -8435,6 +8435,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1946601144}
   - component: {fileID: 1946601143}
+  - component: {fileID: 1946601145}
   m_Layer: 0
   m_Name: MainGameController
   m_TagString: Untagged
@@ -8467,6 +8468,7 @@ MonoBehaviour:
   runner: {fileID: 2051199353}
   particles: {fileID: 1614184785}
   SoundPlayer: {fileID: 1614184790}
+  PV: {fileID: 1946601145}
 --- !u!4 &1946601144
 Transform:
   m_ObjectHideFlags: 0
@@ -8482,6 +8484,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1946601145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1946601142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 1
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &1947785165 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8315583863143335150, guid: 376f47ea3b23a0c4390f513d69e1ca66, type: 3}
