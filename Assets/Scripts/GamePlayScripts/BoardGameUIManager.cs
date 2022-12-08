@@ -1,3 +1,5 @@
+using Photon.Pun;
+using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -31,10 +33,14 @@ public class BoardGameUIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI goldNum;
     [SerializeField] private TextMeshProUGUI starNum;
 
-    public Player localPlayer;
-    
+    private Player localPlayer;
+    private Player otherPlayer;
+
     private void Awake()
     {
+        localPlayer = GameManager.Instance.localPlayer;
+        otherPlayer = GameManager.Instance.otherPlayer;
+
         diceRollBtn.onClick.AddListener(DiceRoll);
         starGetBtn.onClick.AddListener(GetStar);
     }
@@ -142,8 +148,18 @@ public class BoardGameUIManager : MonoBehaviour
         Animator animator = starPanel.GetComponent<Animator>();
         animator.SetTrigger(CloseTrigger);
         this.Invoke(()=>starPanel.gameObject.SetActive(false), 0.8f);
-        BoardGameManager.Instance.StarGenerateFromUi();
+        BoardGameManager.Instance.StarGenerateRequet();
         this.Invoke(()=>localPlayer.TurnFinish(), 1.0f);
+    }
+
+    public void ResultUIOpen()
+    {
+        print(localPlayer.lastScore);
+        print(otherPlayer.lastScore);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            DiceUIOpen();
+        }
     }
 }
 

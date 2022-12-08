@@ -76,7 +76,8 @@ public class Player : MonoBehaviour, IPunObservable
     private float transition;
     private bool isJumpingCompleted;
     [SerializeField] private float speed = 2.5f;
-    
+
+    public float lastScore = 0;
     
     private static readonly int JumpEndTrigger = Animator.StringToHash("JumpEndTrigger");
     private static readonly int JumpTrigger = Animator.StringToHash("JumpTrigger");
@@ -237,11 +238,13 @@ public class Player : MonoBehaviour, IPunObservable
         {
             stream.SendNext(characterType);
             stream.SendNext(currentSeg);
+            stream.SendNext(lastScore);
         }
         else
         {
             characterType = (CharacterType)stream.ReceiveNext();
             currentSeg = (int)stream.ReceiveNext();
+            lastScore = (float)stream.ReceiveNext();
         }
     }
 

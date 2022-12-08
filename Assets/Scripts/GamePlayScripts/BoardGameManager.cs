@@ -25,6 +25,8 @@ public class BoardGameManager : MonoBehaviour
 
     [SerializeField] private Player localPlayer;
 
+    [SerializeField] private Player OtherPlayer;
+
     [SerializeField] private Transform[] stages;
 
     [SerializeField] private PhotonView PV;
@@ -48,20 +50,23 @@ public class BoardGameManager : MonoBehaviour
         {
             instance = this;
 
-            // 플레이어 설정
-            GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-            foreach (GameObject player in players)
+            stages = new Transform[16];
+            for (int i = 0; i < 16; i++)
             {
-                player.transform.GetChild(0).gameObject.SetActive(true);
-                player.GetComponent<Player>().SetRail();
-
-                if (player.GetComponent<PhotonView>().IsMine)
-                {
-                    localPlayer = player.GetComponent<Player>();
-                    localPlayer.transform.GetChild(1).gameObject.SetActive(true);
-                }
+                stages[i] = GameObject.Find($"Stage{i}").transform;
             }
-            uiManager.localPlayer = this.localPlayer;
+
+            localPlayer = GameManager.Instance.localPlayer;
+            OtherPlayer = GameManager.Instance.otherPlayer;
+
+            localPlayer.SetRail();
+            OtherPlayer.SetRail();
+
+            // 스타가 없을 경우 생성, 룸 오브젝트이므로 마스터 클라이언트
+            if (null == Star.Instance && PhotonNetwork.IsMasterClient)
+            {
+                StarRandomGenerate();
+            }
         }
         else
         {
@@ -71,29 +76,16 @@ public class BoardGameManager : MonoBehaviour
 
     private void Start()
     {
-        stages = new Transform[16];
-        for (int i = 0; i < 16; i++)
-        {
-            stages[i] = GameObject.Find($"Stage{i}").transform;
-        }
-
-        // 스타가 없을 경우 생성
-        if (null == Star.Instance && PhotonNetwork.IsMasterClient)
-        {
-            StarRandomGenerate();
-        }
-
-        GameStart();
+        SetActiveObjects(true);
     }
 
-    /// <summary>
-    /// 게임 시작 시 실행 - Server 구축 및 JoinedRoom 완료 시
-    /// </summary>
-    private void GameStart()
+    public void SetActiveObjects(bool flag)
     {
-        if (PhotonNetwork.IsMasterClient)
+        localPlayer.gameObject.SetActive(flag);
+        OtherPlayer.gameObject.SetActive(flag);
+        if (Star.Instance)
         {
-            uiManager.DiceUIOpen();
+            Star.Instance.gameObject.SetActive(flag);
         }
     }
 
@@ -126,13 +118,7 @@ public class BoardGameManager : MonoBehaviour
     [PunRPC]
     private void LoadMinigame()
     {
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-        foreach (GameObject player in players)
-        {
-            player.transform.GetChild(0).gameObject.SetActive(false);
-        }
-
-        localPlayer.transform.GetChild(1).gameObject.SetActive(false);
+        SetActiveObjects(false);
 
         if (PhotonNetwork.IsMasterClient)
         {
@@ -146,7 +132,7 @@ public class BoardGameManager : MonoBehaviour
         uiManager.DiceUIOpen();
     }
 
-    public void StarGenerateFromUi()
+    public void StarGenerateRequet()
     {
         PV.RPC("StarRandomGenerate", RpcTarget.MasterClient);
     }
@@ -168,7 +154,7 @@ public class BoardGameManager : MonoBehaviour
 
     private void StarGenerate(Vector3 starLocation, int starIndex, int starLevelIndex)
     {
-        PhotonNetwork.Instantiate("Prefabs/SoftStar", starLocation, Quaternion.Euler(-90f, 0f, 0f));
+        PhotonNetwork.InstantiateRoomObject("Prefabs/SoftStar", starLocation, Quaternion.Euler(-90f, 0f, 0f));
         Star.Instance.starIndex = starIndex;
         Star.Instance.starLevelIndex = starLevelIndex;
     }

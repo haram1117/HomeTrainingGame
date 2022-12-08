@@ -230,6 +230,7 @@ MonoBehaviour:
   characterType: 1
   rail: {fileID: 0}
   speed: 30
+  lastScore: 0
 --- !u!114 &1675385382
 MonoBehaviour:
   m_ObjectHideFlags: 0

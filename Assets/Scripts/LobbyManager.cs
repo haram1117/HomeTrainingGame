@@ -20,6 +20,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks {
 
     private void Awake()
     {
+        DontDestroyOnLoad(this.gameObject);
         PhotonNetwork.AutomaticallySyncScene = true;
     }
 
@@ -100,7 +101,8 @@ public class LobbyManager : MonoBehaviourPunCallbacks {
         if (!girlButton.IsInteractable())
         {
             PV.RPC("MakePlayer", RpcTarget.All);
-            PV.RPC("StartGame", RpcTarget.MasterClient);
+            this.Invoke(() => PV.RPC("SetOtherPlayer", RpcTarget.All), 0.5f);
+            this.Invoke(() => PV.RPC("StartGame", RpcTarget.MasterClient), 1.0f);
         }
     }
 
@@ -113,7 +115,9 @@ public class LobbyManager : MonoBehaviourPunCallbacks {
         if (!boyButton.IsInteractable())
         {
             PV.RPC("MakePlayer", RpcTarget.All);
-            PV.RPC("StartGame", RpcTarget.MasterClient);
+            this.Invoke(() => PV.RPC("SetOtherPlayer", RpcTarget.All), 0.5f);
+            this.Invoke(() => PV.RPC("StartGame", RpcTarget.MasterClient), 1.0f);
+            this.Invoke(() => PV.RPC("ShowDiceUI", RpcTarget.MasterClient), 1.5f);
         }
     }
 
@@ -122,19 +126,44 @@ public class LobbyManager : MonoBehaviourPunCallbacks {
     {
         if (selectedCharcter == CharacterType.Boy)
         {
-            PhotonNetwork.Instantiate("Prefabs/PlayerBoy", new Vector3(-17.41f, 3.68f, 28.13f), Quaternion.Euler(0f, 180f, 0f));
+            GameManager.Instance.localPlayer = 
+            PhotonNetwork.Instantiate("Prefabs/PlayerBoy", new Vector3(-17.41f, 3.68f, 28.13f),
+                Quaternion.Euler(0f, 180f, 0f)).GetComponent<Player>();
         }
         else
         {
-            PhotonNetwork.Instantiate("Prefabs/PlayerGirl", new Vector3(-21.22f, 3.68f, 28.13f), Quaternion.Euler(0f, 180f, 0f));
+            GameManager.Instance.localPlayer =
+            PhotonNetwork.Instantiate("Prefabs/PlayerGirl", new Vector3(-21.22f, 3.68f, 28.13f),
+                Quaternion.Euler(0f, 180f, 0f)).GetComponent<Player>();
+        }
+    }
+
+    [PunRPC]
+    private void SetOtherPlayer()
+    {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        foreach (GameObject player in players)
+        {
+            if (player.GetComponent<PhotonView>().IsMine == false)
+            {
+                Destroy(player.transform.GetChild(1).gameObject);
+                GameManager.Instance.otherPlayer = player.GetComponent<Player>();
+            }
         }
     }
 
     [PunRPC]
     private void StartGame()
     {
-        print(1);
         PhotonNetwork.LoadLevel("MainBoardGame");
+    }
+
+    [PunRPC]
+    private void ShowDiceUI()
+    {
+        BoardGameUIManager uiManager = GameObject.Find("MainCanvas").GetComponent<BoardGameUIManager>();
+        uiManager.DiceUIOpen();
+        Destroy(this.gameObject);
     }
 
     [PunRPC]
