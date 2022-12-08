@@ -69,8 +69,8 @@ public class TCPManager : MonoBehaviour
                 {
                     string xStr = msg.Split(' ')[1].Remove(msg.Split(' ')[1].Length - 1);
                     string yStr = msg.Split(' ')[3];
-                    cursorPosition.x = float.Parse(xStr);
-                    cursorPosition.y = float.Parse(yStr) * (-1);
+                    cursorPosition.x = float.Parse(xStr) * 2;
+                    cursorPosition.y = float.Parse(yStr) * (-2);
                 }
             }
         }
