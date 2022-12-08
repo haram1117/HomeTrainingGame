@@ -103,6 +103,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks {
             PV.RPC("MakePlayer", RpcTarget.All);
             this.Invoke(() => PV.RPC("SetOtherPlayer", RpcTarget.All), 0.5f);
             this.Invoke(() => PV.RPC("StartGame", RpcTarget.MasterClient), 1.0f);
+            this.Invoke(() => PV.RPC("ShowDiceUI", RpcTarget.MasterClient), 1.5f);
         }
     }
 

@@ -1,3 +1,5 @@
+using Photon.Pun;
+using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,6 +19,7 @@ public class SquatMainController : MonoBehaviour
     public GameObject gameFinBtn;
     public VNectBarracudaRunner runner;
     public int damage;
+    public PhotonView PV;
 
     private int _curStageNo; // 현재 클리어중인 스테이지 넘버
     private int _hardness; // 각스테이지별 채력
@@ -30,6 +33,7 @@ public class SquatMainController : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
+        DontDestroyOnLoad(this.gameObject);
         gameFinBtn.SetActive(false);
         mode = 0;
         screenText.text = "스쿼트를 준비해 주세요.";
@@ -148,7 +152,29 @@ public class SquatMainController : MonoBehaviour
     /// </summary>
     public void FinishBtnOnClick()
     {
-        // result는 크면 클수록 잘한 겁니다.
-        float result = GetPlayerScore();
+        PV.RPC("SetScore", RpcTarget.All);
+        PV.RPC("LoadBoardGame", RpcTarget.MasterClient);
+        this.Invoke(() => PV.RPC("ShowResult", RpcTarget.All), 0.5f);
+    }
+
+    [PunRPC]
+    private void SetScore()
+    {
+        float score = GetPlayerScore();
+        GameManager.Instance.localPlayer.lastScore = score;
+    }
+
+    [PunRPC]
+    private void LoadBoardGame()
+    {
+        PhotonNetwork.LoadLevel("MainBoardGame");
+    }
+
+    [PunRPC]
+    private void ShowResult()
+    {
+        BoardGameUIManager uiManager = GameObject.Find("MainCanvas").GetComponent<BoardGameUIManager>();
+        uiManager.ResultUIOpen();
+        Destroy(this.gameObject);
     }
 }
