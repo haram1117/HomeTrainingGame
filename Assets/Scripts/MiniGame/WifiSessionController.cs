@@ -9,7 +9,7 @@ using UnityEngine;
 
 public class WifiSessionController 
 {
-    public String myIp = "127.0.0.1";
+    public String myIp = "172.30.1.42";
     public int port = 3000;
     private static WifiSessionController wifiSessionController;
     
@@ -37,7 +37,6 @@ public class WifiSessionController
 
     private WifiSessionController()
     {
-        
         wifiSessionController = this;
         hasEvent = false;
         tcpListenerThread = new Thread(Listen);
@@ -58,7 +57,7 @@ public class WifiSessionController
     {
         bool result = hasEvent;
         hasEvent = false;
-        return hasEvent;
+        return result;
     }
     
     private void Listen()
