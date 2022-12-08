@@ -18,7 +18,7 @@ public class TestMinigame : MonoBehaviour
     {
         PV.RPC("SetScore", RpcTarget.All);
         PV.RPC("LoadBoardGame", RpcTarget.MasterClient);
-        this.Invoke(() => PV.RPC("ShowResult", RpcTarget.All), 0.5f);
+        this.Invoke(() => PV.RPC("ShowResult", RpcTarget.All), 1.0f);
     }
 
     [PunRPC]

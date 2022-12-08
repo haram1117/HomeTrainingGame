@@ -58,17 +58,13 @@ public class BoardGameUIManager : MonoBehaviour
         UpdateInfo();
     }
 
-    private void UpdateInfo()
+    public void UpdateInfo()
     {
         starNum.text = localPlayer.GetNowStar().ToString();
         goldNum.text = localPlayer.GetNowGold().ToString();
-        turnNum.text = BoardGameManager.Instance.remainTurn.ToString();
+        turnNum.text = GameManager.Instance.remainTurn.ToString();
     }
 
-    public void SetRemainTurn(int value)
-    {
-        turnNum.text = value.ToString();
-    }
     private void Update()
     {
     }
