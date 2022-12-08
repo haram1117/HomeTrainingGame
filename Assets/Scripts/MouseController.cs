@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class MouseController : MonoBehaviour
 {
-    [SerializeField] private TCPManager tcpManager;
+    //[SerializeField] private TCPManager tcpManager;
 
     private RectTransform rectTransform;
 
@@ -26,8 +26,8 @@ public class MouseController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        rectTransform.anchoredPosition = tcpManager.cursorPosition;
-        if (tcpManager.isMouseClicked && triggerEntered && !processing)
+        rectTransform.anchoredPosition = TCPManager.Instance.cursorPosition;
+        if (TCPManager.Instance.isMouseClicked && triggerEntered && !processing)
         {
             processing = true;
             nowButton.onClick.Invoke();
