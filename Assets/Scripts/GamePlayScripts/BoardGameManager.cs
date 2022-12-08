@@ -125,7 +125,8 @@ public class BoardGameManager : MonoBehaviour
 
         if (PhotonNetwork.IsMasterClient)
         {
-            PhotonNetwork.LoadLevel("Plank");
+            // PhotonNetwork.LoadLevel("Plank");
+            PhotonNetwork.LoadLevel("Squat");
         }
     }
 
