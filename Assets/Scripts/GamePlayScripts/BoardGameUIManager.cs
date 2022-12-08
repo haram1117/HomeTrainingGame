@@ -74,6 +74,11 @@ public class BoardGameUIManager : MonoBehaviour
     /// </summary>
     public void DiceUIOpen()
     {
+        if (GameManager.Instance.remainTurn == 0)
+        {
+            GameManager.Instance.FinishGame();
+            return;
+        }
         dicePanel.SetActive(true);
         diceRollBtn.gameObject.SetActive(true);
     }
