@@ -47,6 +47,11 @@ MonoBehaviour:
   - DiceUIOpen
   - StartMinigame
   - LoadMinigame
+  - LoadBoardGame
+  - MakePlayer
+  - StarRandomGenerateByMaster
+  - StarRandomGenerateFromMaster
+  - StarRandomGenerate
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

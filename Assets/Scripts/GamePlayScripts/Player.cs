@@ -47,31 +47,21 @@ public class Player : MonoBehaviour, IPunObservable
     /// Player Mesh
     /// </summary>
     [SerializeField] private Transform playerMeshTransform;
-    
+
     /// <summary>
     /// player Animator
     /// </summary>
-    private Animator animator;
-
-    /// <summary>
-    /// Instantiate에 사용할 boyPrefab
-    /// </summary>
-    [SerializeField] private GameObject boyPrefab;
-
-    /// <summary>
-    /// Instantiate에 사용할 girlPrefab
-    /// </summary>
-    [SerializeField] private GameObject girlPrefab;
-
-    /// <summary>
-    /// Player의 캐릭터 타입
-    /// </summary>
-    [SerializeField] private CharacterType characterType;
+    [SerializeField] private Animator animator;
 
     /// <summary>
     /// Player의 Photon View 컴포넌트
     /// </summary>
     [SerializeField] private PhotonView PV;
+
+    /// <summary>
+    /// Player의 캐릭터 타입
+    /// </summary>
+    [SerializeField] private CharacterType characterType;
 
     /// <summary>
     /// 주사위 후 최종 목표위치가 star 위치일 때 true
@@ -93,7 +83,6 @@ public class Player : MonoBehaviour, IPunObservable
 
     private void Awake()
     {
-        SetCharacterType();
         DontDestroyOnLoad(this.gameObject);
 
         if (!PV.IsMine)
@@ -104,23 +93,6 @@ public class Player : MonoBehaviour, IPunObservable
 
     private void Start()
     {
-        if (characterType == CharacterType.Boy)
-        {
-            GameObject character = Instantiate(boyPrefab, Vector3.zero, Quaternion.identity);
-            character.transform.SetParent(transform.GetChild(0).transform, false);
-            playerMeshTransform = character.transform;
-        }
-        else
-        {
-            GameObject character = Instantiate(girlPrefab, Vector3.zero, Quaternion.identity);
-            character.transform.SetParent(transform.GetChild(0).transform, false);
-            playerMeshTransform = character.transform;
-        }
-        animator = GetComponentInChildren<Animator>();
-        rail = GameObject.Find($"RailFor{characterType}").GetComponent<Rail>();
-
-        transform.position = rail.nodes[0].position;
-        transform.rotation = rail.nodes[0].rotation;
     }
 
     private void Update()
@@ -133,6 +105,11 @@ public class Player : MonoBehaviour, IPunObservable
         }
     }
 
+    public void SetRail()
+    {
+        rail = GameObject.Find($"RailFor{characterType}").GetComponent<Rail>();
+    }
+
     /// <summary>
     /// 주사위 값에 따라 Player Stage 이동
     /// </summary>
@@ -140,7 +117,6 @@ public class Player : MonoBehaviour, IPunObservable
     public void MoveCharacterWithStageNum(int num)
     {
         isJumpingCompleted = false;
-        // animator.SetTrigger(JumpTrigger);
         PV.RPC("SetTriggerRPC", RpcTarget.All, JumpTrigger);
         state = PlayerState.Moving;
         nowDiceValue = num + 1;
@@ -172,7 +148,6 @@ public class Player : MonoBehaviour, IPunObservable
                 {
                     stageLeft--;
                     state = PlayerState.Waiting;
-                    // animator.SetTrigger(JumpEndTrigger);
                     PV.RPC("SetTriggerRPC", RpcTarget.All, JumpEndTrigger);
                     if (stageLeft > 0)
                     {
@@ -181,16 +156,12 @@ public class Player : MonoBehaviour, IPunObservable
                     else 
                     {
                         // 플레이어가 가야하는 마지막 칸이 Star가 있는 칸인 경우
-                        if ((int)Math.Truncate((double)currentSeg / 2) == BoardGameManager.Instance.starIndex)
+                        if ((int)Math.Truncate((double)currentSeg / 2) == Star.Instance.starIndex)
                         {
                             BoardGameManager.Instance.PlayerGetStar();
                         }
                         else
                         {
-                            // // 턴 종료 flag
-                            // isJumpingCompleted = true;
-                            // BoardGameManager.Instance.SetNextPlayer();
-                            // BoardGameManager.Instance.DoNextTurn();
                             TurnFinish();
                         }
                     }
@@ -221,7 +192,6 @@ public class Player : MonoBehaviour, IPunObservable
     /// </summary>
     private void MoveAgain()
     {
-        // animator.SetTrigger(JumpTrigger);
         PV.RPC("SetTriggerRPC", RpcTarget.All, JumpTrigger);
         state = PlayerState.Moving;
     }
@@ -261,25 +231,17 @@ public class Player : MonoBehaviour, IPunObservable
         BoardGameManager.Instance.DoNextTurn();
     }
 
-    private void SetCharacterType()
-    {
-        GameObject lobbyManager = GameObject.Find("LobbyManager");
-        if (lobbyManager != null)
-        {
-            characterType = lobbyManager.GetComponent<LobbyManager>().selectedCharcter;
-            Destroy(lobbyManager);
-        }
-    }
-
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting)
         {
             stream.SendNext(characterType);
+            stream.SendNext(currentSeg);
         }
         else
         {
             characterType = (CharacterType)stream.ReceiveNext();
+            currentSeg = (int)stream.ReceiveNext();
         }
     }
 
