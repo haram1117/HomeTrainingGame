@@ -239,12 +239,16 @@ public class Player : MonoBehaviour, IPunObservable
             stream.SendNext(characterType);
             stream.SendNext(currentSeg);
             stream.SendNext(lastScore);
+            stream.SendNext(starCount);
+            stream.SendNext(goldCount);
         }
         else
         {
             characterType = (CharacterType)stream.ReceiveNext();
             currentSeg = (int)stream.ReceiveNext();
             lastScore = (float)stream.ReceiveNext();
+            starCount = (int)stream.ReceiveNext();
+            goldCount = (int)stream.ReceiveNext();
         }
     }
 
