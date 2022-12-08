@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Photon.Pun;
+using Photon.Realtime;
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Button = UnityEngine.UI.Button;
-
 
 enum Mode{
     READY, RUNNING, END
@@ -25,7 +26,8 @@ public class PlankMainController : MonoBehaviour
     public VNectBarracudaRunner runner;
     public GameObject particles;
     public LaserSoundPlayer SoundPlayer;
-    
+    public PhotonView PV;
+
     private Mode _gameMode;
     private float _time;
     private int _health;
@@ -34,6 +36,7 @@ public class PlankMainController : MonoBehaviour
     
     public void Start()
     {
+        DontDestroyOnLoad(this.gameObject);
         StartGame();
         button.SetActive(false);
     }
@@ -153,7 +156,29 @@ public class PlankMainController : MonoBehaviour
     /// </summary>
     public void FinishBtnOnClick()
     {
-        // result는 크면 클수록 잘한 겁니다.
-        float result = GetPlayerScore();
+        PV.RPC("SetScore", RpcTarget.All);
+        PV.RPC("LoadBoardGame", RpcTarget.MasterClient);
+        this.Invoke(() => PV.RPC("ShowResult", RpcTarget.All), 0.5f);
+    }
+
+    [PunRPC]
+    private void SetScore()
+    {
+        float score = GetPlayerScore();
+        GameManager.Instance.localPlayer.lastScore = score;
+    }
+
+    [PunRPC]
+    private void LoadBoardGame()
+    {
+        PhotonNetwork.LoadLevel("MainBoardGame");
+    }
+
+    [PunRPC]
+    private void ShowResult()
+    {
+        BoardGameUIManager uiManager = GameObject.Find("MainCanvas").GetComponent<BoardGameUIManager>();
+        uiManager.ResultUIOpen();
+        Destroy(this.gameObject);
     }
 }

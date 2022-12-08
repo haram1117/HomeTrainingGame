@@ -744,6 +744,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   connectionInfoText: {fileID: 92890824}
   joinButton: {fileID: 1196907689}
+  mainPanel: {fileID: 1302395766}
   selectCharacterPanel: {fileID: 14527077}
   selectedCharacterText: {fileID: 2062040435}
   boyButton: {fileID: 597446712}
@@ -769,7 +770,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents: []
-  sceneViewId: 1
+  sceneViewId: 100
   InstantiationId: 0
   isRuntimeInstantiated: 0
 --- !u!1 &973554008
@@ -792,7 +793,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &973554009
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1579,7 +1580,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1535236574
 MonoBehaviour:
   m_ObjectHideFlags: 0
