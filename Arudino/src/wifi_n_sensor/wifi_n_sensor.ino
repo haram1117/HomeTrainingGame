@@ -11,7 +11,7 @@ EMGFilters myFilter;
 SAMPLE_FREQUENCY sampleRate = SAMPLE_FREQ_1000HZ;
 NOTCH_FREQUENCY humFreq = NOTCH_FREQ_50HZ;
 
-static int Threshold = 4000;
+static int Threshold = 100;
 
 unsigned long timeStamp;
 unsigned long timeBudget;
@@ -27,7 +27,7 @@ const char* ssid     = STASSID;
 const char* password = STAPSK;
 
 const char* host = "172.30.1.42";
-const uint16_t port = 4129;
+const uint16_t port = 3000;
 
 ESP8266WiFiMulti WiFiMulti;
 WiFiClient client;

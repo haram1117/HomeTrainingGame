@@ -71,7 +71,10 @@ public class SquatMainController : MonoBehaviour
             {
                 print("squated");
                 if (wifiController.isEventExist())
+                {
+                    print("Critical");
                     damage *= 2;
+                }
                 DigAttack(damage);
             }
         }
