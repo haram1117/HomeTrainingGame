@@ -1,4 +1,4 @@
-# HomeTrainingGame
+# Health Battle on the Lake
 [2022 Fall] Capstone Design Project 
 
 ### Summary
