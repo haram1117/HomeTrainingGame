@@ -42,6 +42,7 @@ public class VideoCapture : MonoBehaviour
         WebCamDevice[] devices = WebCamTexture.devices;
         if(devices.Length <= WebCamIndex)
         {
+            print("web cam len : " + devices.Length);
             WebCamIndex = 0;
         }
         

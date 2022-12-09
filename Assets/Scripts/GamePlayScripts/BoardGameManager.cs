@@ -126,11 +126,11 @@ public class BoardGameManager : MonoBehaviour
             //PhotonNetwork.LoadLevel("TestMinigame");
             if (GameManager.Instance.remainTurn % 2 == 1)
             {
-                PhotonNetwork.LoadLevel("Plank");
+                PhotonNetwork.LoadLevel("Squat");
             }
             else
             {
-                PhotonNetwork.LoadLevel("Squat");
+                PhotonNetwork.LoadLevel("Plank");
             }
         }
     }

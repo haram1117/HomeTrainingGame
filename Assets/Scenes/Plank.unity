@@ -7974,7 +7974,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4
   UseWebCam: 1
-  WebCamIndex: 2
+  WebCamIndex: 0
   VideoPlayer: {fileID: 1952556439}
 --- !u!23 &1817810142
 MeshRenderer:
