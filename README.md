@@ -119,6 +119,6 @@ python app.py
 ## Team Members
 |이름|학번|이메일|
 |:---:|:---:|:---:|
-|김승찬|2018102174|rohsik2@gmail.com|
-|노현욱|2017103983|seungchan1219@gmail.com|
+|김승찬|2018102174|seungchan1219@gmail.com|
+|노현욱|2017103983|rohsik2@gmail.com|
 |박하람|2019102181|haram1117@khu.ac.kr|
