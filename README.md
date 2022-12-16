@@ -1,6 +1,8 @@
 # Health Battle on the Lake
 [2022 Fall] Capstone Design Project 
 
+[최종 보고서.pdf](https://github.com/haram1117/HomeTrainingGame/files/10243091/default.pdf)
+
 ### Summary
 
 XR기반 홈트레이닝 시스템 및 근전도 센서를 활용한 게이미피케이션
@@ -11,8 +13,7 @@ XR기반 홈트레이닝 시스템 및 근전도 센서를 활용한 게이미�
 1. [Description](#description)
     - [1. Overviews](#1-overviews)
     - [2. Story](#2-story)
-    - [3. Game Mechanics](#3-game-mechanics)
-    - [4. Tech](#4-tech)
+    - [3. Tech](#3-tech)
 2. [How To Play](#how-to-play)
 3. [Team Members](#team-members)
 
@@ -56,9 +57,7 @@ Microsoft Windows, MacOS
   
 호수를 둘러싸고 있는 마을을 배경으로 Haley와 Leonard가 결투를 벌인다.
 <br/></br>
-### 3. Game mechanics
-<br/></br>
-### 4. Tech
+### 3. Tech
 #### 1. Platform
 ![platform](https://user-images.githubusercontent.com/63827499/206659291-cdd360cd-5f77-4bae-b927-eeb501949a01.png)
 - Barraduda 에서 제공하는 Supported Platforms
@@ -80,11 +79,6 @@ Microsoft Windows, MacOS
 ###### 미니게임에서의 플레이어 소프트웨어 구성
 ![asdf](https://user-images.githubusercontent.com/63827499/206663122-2071f966-1d7d-45df-98b2-e2fd345ec200.png)
 
-#### 4. Modules
-###### 근전도 센서
-###### 모션 인식
-###### 제스처 인식
-###### 멀티플레이어
 
 ## How To Play
 - Unity Version: 2020.3.41f1
